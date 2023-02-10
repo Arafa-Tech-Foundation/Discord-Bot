@@ -1,9 +1,11 @@
-import { REST, Routes } from "discord.js";
 import { config } from "dotenv";
-import { readdirSync } from "fs";
-import path, { join } from "path";
 config();
+import { REST, Routes } from "discord.js";
+import { readdirSync } from "fs";
+
 (async () => {
+  if (!process.env.TOKEN) throw new Error("TOKEN is not defined!");
+
   const commands = [];
   const cmdFiles = readdirSync("./src/commands");
 
@@ -15,18 +17,18 @@ config();
 
   try {
     console.log(
-      `Started refreshing ${commands.length} application (/) commands.`
+      `Started refreshing ${commands.length} application (/) commands.`,
     );
 
-    const data = await rest.put(
-      Routes.applicationCommands(process.env.CLIENT_ID),
+    const data: any = await rest.put(
+      Routes.applicationCommands("1073492380398923868"),
       {
         body: commands,
-      }
+      },
     );
 
     console.log(
-      `Successfully reloaded ${data.length} application (/) commands.`
+      `Successfully reloaded ${data.length} application (/) commands.`,
     );
   } catch (error) {
     // And of course, make sure you catch and log any errors!

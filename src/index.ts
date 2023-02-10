@@ -1,29 +1,31 @@
 import { config } from "dotenv";
+config();
 import { readdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { Client, Events, GatewayIntentBits, Collection } from "discord.js";
-config();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+//@ts-ignore
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const cmdPath = join(__dirname, "commands");
+console.log(cmdPath);
 const commandFiles = readdirSync(cmdPath);
 
-client.commands = new Collection();
+const commands = new Collection<string, any>();
 
 commandFiles.forEach(async (file) => {
+  console.log(file);
   const command = (await import(join(cmdPath, file))).default;
   if (command.data && command.execute) {
-    console.log("Loading command: " + command.data.name);
-    client.commands.set(command.data.name, command);
+    console.log("Loaded command: " + command.data.name);
+    commands.set(command.data.name, command);
   }
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
-  console.log(interaction);
-  const command = interaction.client.commands.get(interaction.commandName);
+  const command = commands.get(interaction.commandName);
   try {
     await command.execute(interaction);
   } catch (error) {
@@ -32,4 +34,5 @@ client.on(Events.InteractionCreate, async (interaction) => {
     });
   }
 });
+
 client.login(process.env.TOKEN);
