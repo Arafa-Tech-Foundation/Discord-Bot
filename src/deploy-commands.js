@@ -5,14 +5,12 @@ import path, { join } from "path";
 config();
 (async () => {
   const commands = [];
-  const cmdFiles = readdirSync("./commands");
+  const cmdFiles = readdirSync("./src/commands");
 
   for (const file of cmdFiles) {
     const command = (await import("./commands/" + file)).default;
-    console.log(command);
     commands.push(command.data);
   }
-  console.log(commands);
   const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
   try {
@@ -27,7 +25,6 @@ config();
       }
     );
 
-    console.log(data);
     console.log(
       `Successfully reloaded ${data.length} application (/) commands.`
     );
