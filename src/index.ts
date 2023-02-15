@@ -1,9 +1,12 @@
 import { config } from "dotenv";
 config();
 import { readdirSync } from "fs";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import { Client, Events, GatewayIntentBits, Collection } from "discord.js";
-
+//@ts-ignore
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const cmdPath = join(__dirname, "commands");
 console.log(cmdPath);
