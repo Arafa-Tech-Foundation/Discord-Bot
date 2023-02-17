@@ -5,6 +5,7 @@ import { readdirSync } from "fs";
 
 (async () => {
   if (!process.env.TOKEN) throw new Error("TOKEN is not defined!");
+  if (!process.env.GUILD_ID) throw new Error("GUILD_ID is not defined!");
 
   const commands = [];
   const cmdFiles = readdirSync("./src/commands");
