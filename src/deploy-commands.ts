@@ -5,6 +5,7 @@ import { readdirSync } from "fs";
 
 (async () => {
   if (!process.env.TOKEN) throw new Error("TOKEN is not defined!");
+  if (!process.env.GUILD_ID) throw new Error("GUILD_ID is not defined!");
 
   const commands = [];
   const cmdFiles = readdirSync("./src/commands");
@@ -21,7 +22,7 @@ import { readdirSync } from "fs";
     );
 
     const data: any = await rest.put(
-      Routes.applicationCommands("1073492380398923868"),
+      Routes.applicationCommands(process.env.GUILD_ID),
       {
         body: commands,
       },

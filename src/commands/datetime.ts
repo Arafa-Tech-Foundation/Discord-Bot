@@ -12,6 +12,9 @@ PST: ${new Date().toLocaleString("en-US", {
 EST: ${new Date().toLocaleString("en-US", {
       timeZone: "America/New_York",
     })}
+GMT: ${new Date().toLocaleString("en-US", {
+      timeZone: "Europe/London",
+    })}
 AEST: ${new Date().toLocaleString("en-US", {
       timeZone: "Australia/Sydney",
     })}
