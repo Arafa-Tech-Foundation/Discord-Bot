@@ -21,7 +21,7 @@ import { readdirSync } from "fs";
     );
 
     const data: any = await rest.put(
-      Routes.applicationCommands("1073492380398923868"),
+      Routes.applicationCommands(process.env.GUILD_ID),
       {
         body: commands,
       },
