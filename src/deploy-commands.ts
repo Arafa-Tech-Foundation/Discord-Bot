@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 config();
 import { REST, Routes } from "discord.js";
-import { readdirSync } from "fs";
+import { lstatSync, readdirSync } from "fs";
 
 (async () => {
   if (!process.env.TOKEN) throw new Error("TOKEN is not defined!");
@@ -11,6 +11,7 @@ import { readdirSync } from "fs";
   const cmdFiles = readdirSync("./src/commands");
 
   for (const file of cmdFiles) {
+    if ((await lstatSync(`./${file}`)).isDirectory()) continue; // skip sub-folders
     const command = (await import("./commands/" + file)).default;
     commands.push(command.data);
   }
@@ -18,18 +19,18 @@ import { readdirSync } from "fs";
 
   try {
     console.log(
-      `Started refreshing ${commands.length} application (/) commands.`,
+      `Started refreshing ${commands.length} application (/) commands.`
     );
 
     const data: any = await rest.put(
       Routes.applicationCommands(process.env.GUILD_ID),
       {
         body: commands,
-      },
+      }
     );
 
     console.log(
-      `Successfully reloaded ${data.length} application (/) commands.`,
+      `Successfully reloaded ${data.length} application (/) commands.`
     );
   } catch (error) {
     // And of course, make sure you catch and log any errors!
