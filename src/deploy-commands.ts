@@ -28,7 +28,7 @@ import { lstatSync, readdirSync } from "fs";
         process.env.GUILD_ID,
       ),
       {
-        body: commands.map((command) => command.toJSON()),
+        body: commands,
       },
     );
 
