@@ -1,7 +1,7 @@
 // creates a row for every user in the server. only use if bot is down after extended period of time and users aren't automatically added
 import { config } from "dotenv";
 config();
-import { REST, Routes } from "discord.js";
+import { GuildMember, REST, Routes } from "discord.js";
 import { createUser } from "../util";
 import { getUsers } from "../util";
 (async () => {
@@ -10,8 +10,20 @@ import { getUsers } from "../util";
 
   console.log("Fetching database rows...");
   const users = await getUsers();
-
+  const dbUserIds = users.map((user) => user.id);
   const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
-  const data = await rest.get(Routes.guildMembers(process.env.GUILD_ID));
+  const guildMembers = (await rest.get(
+    `${Routes.guildMembers(process.env.GUILD_ID)}?limit=1000`
+  )) as GuildMember[]; // TODO: use pagination when server gets big to avoid having the api send too much data in one req
+
+  // console.log(data.map((u) => u.user.id));
+
+  guildMembers.forEach(async (member) => {
+    if (!(member.user.id in dbUserIds)) {
+      // TODO: ensure bots don't get added
+      const newUser = await createUser(member.user.id);
+      console.log(`Created user: ${member.user.id} (${member.user.username})`);
+    }
+  });
 })();
