@@ -8,10 +8,10 @@ export default {
   data: new SlashCommandBuilder()
     .setName("set_qotd")
     .setDescription(
-      "Updates the topic of the current channel with a random question"
+      "Updates the topic of the current channel with a random question",
     ) // could be quotes, questions, interesting facts, etc
-    .addStringOption(
-      new SlashCommandStringOption().setName("topic").setRequired(false)
+    .addStringOption((option) =>
+      option.setName("topic").setDescription("The topic that you want to update to.").setRequired(false),
     ),
 
   async execute(interaction: CommandInteraction) {
