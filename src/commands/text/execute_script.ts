@@ -2,6 +2,9 @@ import axios from "axios";
 const SUPPORTED_LANGS = {
   js: 63,
   py: 71,
+  cpp: 10,
+  c: 48,
+  bash: 46,
 };
 export default {
   name: "exec",
