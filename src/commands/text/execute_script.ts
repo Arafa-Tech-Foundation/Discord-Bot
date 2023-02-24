@@ -1,18 +1,33 @@
 import axios from "axios";
+import { codeBlock } from "discord.js";
 const SUPPORTED_LANGS = {
   js: 63,
   py: 71,
   cpp: 10,
   c: 48,
   bash: 46,
+  asm: 45,
 };
 export default {
   name: "exec",
   async execute(event) {
     const lines = event.content.split("\n");
+    if (lines[0].split(" ")[1] == "help") {
+      await event.reply(
+        "Syntax: \n\n" +
+          "./exec\n\\`\\`\\`<lang>\n<code>\n\\`\\`\\`\n" +
+          `Supported languages: \`${Object.keys(SUPPORTED_LANGS).join(" ")}\``
+      );
+      return;
+    }
     const language = lines[1].substring(3);
     if (!(language in SUPPORTED_LANGS)) {
-      await event.reply(`Language \`${language}\` is not supported.`);
+      await event.reply(
+        `Language \`${language}\` is not supported. Supported languages: \`${Object.keys(
+          SUPPORTED_LANGS
+        ).join(" ")}\``
+      );
+
       return;
     }
     const source_code = lines.slice(2, -1).join("\n");
