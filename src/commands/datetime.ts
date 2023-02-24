@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "discord.js";
-// here
+
 export default {
   data: new SlashCommandBuilder()
     .setName("time")
