@@ -18,6 +18,9 @@ GMT: ${new Date().toLocaleString("en-US", {
 AEST: ${new Date().toLocaleString("en-US", {
       timeZone: "Australia/Sydney",
     })}
+CST: ${new Date().toLocaleString("en-US", {
+      timeZone: "America/Chicago",
+    })}
 `);
   },
 };
