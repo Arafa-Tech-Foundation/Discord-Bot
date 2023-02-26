@@ -10,9 +10,6 @@ import {
 } from "discord.js";
 config();
 const PREFIX = "+";
-//@ts-ignore
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
