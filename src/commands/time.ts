@@ -21,6 +21,18 @@ AEST: ${new Date().toLocaleString("en-US", {
 CST: ${new Date().toLocaleString("en-US", {
       timeZone: "America/Chicago",
     })}
+JST: ${new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Tokyo",
+    })}
+IST: ${new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    })}
+CET: ${new Date().toLocaleString("en-US", {
+      timeZone: "Europe/Paris",
+    })}
+MDT: ${new Date().toLocaleString("en-US", {
+      timeZone: "America/Denver",
+    })}
 `);
   },
 };
