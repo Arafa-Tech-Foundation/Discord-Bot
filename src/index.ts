@@ -79,5 +79,5 @@ client.on(Events.MessageCreate, async (event) => {
     }
   }
 });
-const token = process.env.DEV ? process.env.CANARY_TOKEN : process.env.TOKEN;
+const token = process.env.TOKEN;
 client.login(token);

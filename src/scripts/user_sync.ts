@@ -17,8 +17,6 @@ import { getUsers } from "../util";
     `${Routes.guildMembers(process.env.GUILD_ID)}?limit=1000`
   )) as GuildMember[]; // TODO: use pagination when server gets big to avoid having the api send too much data in one req
 
-  // console.log(data.map((u) => u.user.id));
-
   guildMembers.forEach(async (member) => {
     if (!(member.user.id in dbUserIds)) {
       // TODO: ensure bots don't get added
