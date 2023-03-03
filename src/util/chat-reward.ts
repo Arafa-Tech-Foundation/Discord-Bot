@@ -22,7 +22,7 @@ export function tryReward(id: string): void {
     if (rewarded.get(id) == undefined) {
         rewarded.set(id, true);
         setTimeout(() => rewarded.delete(id), rewardCooldown * 1000);
-        dueRewards.set(id, (dueRewards.get(id) + rewardAmount) || 1);
+        dueRewards.set(id, (dueRewards.get(id) + rewardAmount) || rewardAmount);
     }
 }
 
