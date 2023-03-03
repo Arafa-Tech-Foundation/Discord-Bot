@@ -1,5 +1,4 @@
 {
-  "name": "kody",
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "ts-node-dev src/index.ts",
