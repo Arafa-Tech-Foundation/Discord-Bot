@@ -1,6 +1,8 @@
 import { config } from "dotenv";
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
+import { start, tryReward } from './util/chat-reward';
+
 import {
   Client,
   Events,
@@ -77,7 +79,10 @@ client.on(Events.MessageCreate, async (event) => {
         content: "There was an error: " + error,
       });
     }
-  }
+  } else {
+    tryReward(event.author.id);
+  };
 });
-const token = process.env.TOKEN;
-client.login(token);
+
+client.login(process.env.TOKEN);
+start();
