@@ -1,5 +1,5 @@
 import axios from "axios";
-import { codeBlock } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 const SUPPORTED_LANGS = {
   js: 63,
   py: 71,
@@ -13,12 +13,23 @@ export default {
   async execute(event) {
     const lines = event.content.split("\n");
     if (lines[0].split(" ")[1] == "help") {
-      await event.reply(
-        "Syntax: \n\n" +
-          "./exec\n\\`\\`\\`<lang>\n<code>\n\\`\\`\\`\n" +
-          `Supported languages: \`${Object.keys(SUPPORTED_LANGS).join(" ")}\``
-      );
-      return;
+      const embed = new EmbedBuilder()
+        .setTitle("Code Execution Help")
+        .setDescription(
+          `Remotely execute code and view the output. 
+          Supported languages:  \`${Object.keys(SUPPORTED_LANGS).join(
+            " "
+          )}\`\n\n` +
+            "Syntax: \n\n" +
+            "./exec\n\\`\\`\\`<lang>\n<code>\n\\`\\`\\`\n"
+        )
+        .setAuthor({ name: "Kody", url: "https://arafa.tech" }); // await event.reply(
+
+      // `Supported languages: \`${Object.keys(SUPPORTED_LANGS).join(" ")}\``
+      // );
+      return event.reply({
+        embeds: [embed],
+      });
     }
     const language = lines[1].substring(3);
     if (!(language in SUPPORTED_LANGS)) {
