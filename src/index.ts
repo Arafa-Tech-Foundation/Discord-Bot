@@ -23,6 +23,8 @@ const commandFiles = readdirSync(cmdPath);
 const textCommandFiles = readdirSync(join(cmdPath, "text"));
 const commands = new Collection<string, any>();
 const textCommands = new Collection<string, any>();
+
+// load slash commands by going through each file in src/commands
 commandFiles.forEach(async (file) => {
   if ((await lstatSync(join(cmdPath, file))).isDirectory()) return; // skip sub-folders
 
@@ -33,6 +35,7 @@ commandFiles.forEach(async (file) => {
   }
 });
 
+// load 'text' commands (such as ./exec) located in src/commands/text
 textCommandFiles.forEach(async (file) => {
   const command = (await import(join(cmdPath, "text", file))).default;
 
@@ -41,6 +44,8 @@ textCommandFiles.forEach(async (file) => {
   }
 });
 
+
+// if a slash command was created, run the proper one
 client.on(Events.InteractionCreate, async (interaction) => {
   if (interaction.isChatInputCommand()) {
     const command = commands.get(interaction.commandName);
@@ -54,7 +59,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
+// filter for text commands
 client.on(Events.MessageCreate, async (event) => {
+  /* support either: 
+  ./cmd <stuff>
+  OR
+  ./cmd
+  <stuff>
+  */
+
   if (event.content.startsWith(PREFIX)) {
     const spaceIndex = event.content.indexOf(" ");
     const newLineIndex = event.content.indexOf("\n");
