@@ -8,7 +8,6 @@ import {
   Events,
   GatewayIntentBits,
   Collection,
-  SlashCommandSubcommandBuilder,
 } from "discord.js";
 config();
 const PREFIX = "+";
@@ -56,7 +55,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 client.on(Events.MessageCreate, async (event) => {
-  const guild = await event.guild.fetch();
   if (event.content.startsWith(PREFIX)) {
     const spaceIndex = event.content.indexOf(" ");
     const newLineIndex = event.content.indexOf("\n");

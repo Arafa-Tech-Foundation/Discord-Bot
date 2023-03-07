@@ -4,6 +4,7 @@ config();
 import { GuildMember, REST, Routes } from "discord.js";
 import { createUser } from "../util";
 import { getUsers } from "../util";
+
 (async () => {
   if (!process.env.TOKEN) throw new Error("TOKEN is not defined!");
   if (!process.env.GUILD_ID) throw new Error("GUILD_ID is not defined!");
