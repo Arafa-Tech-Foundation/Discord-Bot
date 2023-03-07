@@ -8,11 +8,11 @@ import { lstatSync, readdirSync } from "fs";
   if (!process.env.GUILD_ID) throw new Error("GUILD_ID is not defined!");
 
   const commands: SlashCommandBuilder[] = [];
-  const cmdFiles = readdirSync("./src/commands");
+  const cmdFiles = readdirSync("../src/commands");
 
   for (const file of cmdFiles) {
-    if (lstatSync(`${__dirname}/commands/${file}`).isDirectory()) continue; // skip sub-folders
-    const command = (await import("./commands/" + file)).default;
+    if (lstatSync(`${__dirname}/../commands/${file}`).isDirectory()) continue; // skip sub-folders
+    const command = (await import("../commands/" + file)).default;
     commands.push(command.data);
   }
   const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
