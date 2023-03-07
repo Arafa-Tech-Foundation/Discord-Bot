@@ -23,10 +23,8 @@ export default {
             "Syntax: \n\n" +
             "./exec\n\\`\\`\\`<lang>\n<code>\n\\`\\`\\`\n"
         )
-        .setAuthor({ name: "Kody", url: "https://arafa.tech" }); // await event.reply(
+        .setAuthor({ name: "Kody", url: "https://arafa.tech" });
 
-      // `Supported languages: \`${Object.keys(SUPPORTED_LANGS).join(" ")}\``
-      // );
       return event.reply({
         embeds: [embed],
       });

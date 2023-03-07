@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
-import { start, tryReward } from './util/chat-reward';
+import { start, tryReward } from './util/';
 
 import {
   Client,
