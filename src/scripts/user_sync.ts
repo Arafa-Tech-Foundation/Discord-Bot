@@ -19,7 +19,7 @@ import { getUsers } from "../util";
   )) as GuildMember[]; // TODO: use pagination when server gets big to avoid having the api send too much data in one req
 
   guildMembers.forEach(async (member) => {
-    if (!(member.user.id in dbUserIds)) {
+    if (!dbUserIds.includes(member.user.id)) {
       // TODO: ensure bots don't get added
       const newUser = await createUser(member.user.id);
       console.log(`Created user: ${member.user.id} (${member.user.username})`);
