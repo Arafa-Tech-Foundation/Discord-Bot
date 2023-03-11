@@ -95,5 +95,7 @@ client.on(Events.MessageCreate, async (event) => {
   };
 });
 
-client.login(process.env.TOKEN);
+client.login(process.env.TOKEN).then(s => {
+  console.log("Logged in as " + client.user.username)
+})
 start();
