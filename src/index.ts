@@ -10,7 +10,7 @@ import {
   Collection,
 } from "discord.js";
 config();
-const PREFIX = "+";
+const PREFIX = "./";
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,

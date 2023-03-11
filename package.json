@@ -3,7 +3,8 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "ts-node-dev src/index.ts",
-    "deploy": "ts-node src/scripts/deploy-commands.ts"
+    "deploy": "ts-node src/scripts/deploy-commands.ts",
+    "db-sync": "ts-node src/scripts/user-sync.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",
