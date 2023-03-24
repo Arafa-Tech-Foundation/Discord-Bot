@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import { start, tryReward } from './util/';
+import { createUser } from './util/database';
 
 import {
   Client,
@@ -16,6 +17,7 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMembers
   ],
 });
 const cmdPath = join(__dirname, "commands");
@@ -57,6 +59,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
       });
     }
   }
+});
+
+client.on(Events.GuildMemberAdd, async (event) => {
+  createUser(event.user.id).catch(error => {
+    if (error.code == 'P2002') {
+      console.log(`${event.user.tag} has joined, but is already in the database.`)
+    }
+  });
 });
 
 // filter for text commands
