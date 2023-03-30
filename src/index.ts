@@ -23,6 +23,20 @@ const commandFiles = readdirSync(cmdPath);
 const textCommandFiles = readdirSync(join(cmdPath, "text"));
 const commands = new Collection<string, any>();
 const textCommands = new Collection<string, any>();
+const handlingPath = join(__dirname, "handling");
+const handlingFiles = readdirSync(handlingPath);
+const eventHandlers = new Collection<string, any>();
+
+
+// load 'text' commands (such as ./exec) located in src/commands/text
+textCommandFiles.forEach(async (file) => {
+  const command = (await import(join(cmdPath, "text", file))).default;
+
+  if (command.execute && command.name) {
+    textCommands.set(command.name, command);
+  }
+});
+
 
 // load slash commands by going through each file in src/commands
 commandFiles.forEach(async (file) => {
@@ -35,14 +49,50 @@ commandFiles.forEach(async (file) => {
   }
 });
 
-// load 'text' commands (such as ./exec) located in src/commands/text
-textCommandFiles.forEach(async (file) => {
-  const command = (await import(join(cmdPath, "text", file))).default;
 
-  if (command.execute && command.name) {
-    textCommands.set(command.name, command);
+// load handling file
+handlingFiles.forEach(async (file) => {
+  const handler = (await import(join(handlingPath, file))).default;
+  
+  eventHandlers.set("eventHandler", handler)
+});
+
+
+// load slash commands by going through each file in src/commands
+commandFiles.forEach(async (file) => {
+  if ((await lstatSync(join(cmdPath, file))).isDirectory()) return; // skip sub-folders
+
+  const command = (await import(join(cmdPath, file))).default;
+  if (command.data && command.execute) {
+    console.log("Loaded command: " + command.data.name);
+    commands.set(command.data.name, command);
   }
 });
+
+
+// load slash commands by going through each file in src/commands
+commandFiles.forEach(async (file) => {
+  if ((await lstatSync(join(cmdPath, file))).isDirectory()) return; // skip sub-folders
+
+  const command = (await import(join(cmdPath, file))).default;
+  if (command.data && command.execute) {
+    console.log("Loaded command: " + command.data.name);
+    commands.set(command.data.name, command);
+  }
+});
+
+
+// load slash commands by going through each file in src/commands
+commandFiles.forEach(async (file) => {
+  if ((await lstatSync(join(cmdPath, file))).isDirectory()) return; // skip sub-folders
+
+  const command = (await import(join(cmdPath, file))).default;
+  if (command.data && command.execute) {
+    console.log("Loaded command: " + command.data.name);
+    commands.set(command.data.name, command);
+  }
+});
+
 
 
 // if a slash command was created, run the proper one
