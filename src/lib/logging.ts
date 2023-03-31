@@ -11,25 +11,32 @@ export const logDiscordEvent = (title: string) => {
 
   return embed;
 }
+export enum LogLevel {
+  DEBUG,
+  INFO,
+  WARN,
+  ERROR,
+  FATAL
+}
 
-export const logMessage = (message: string, level: number = 0) => {
-  const levels = {
-    0: 'DEBUG',
-    1: 'INFO',
-    2: 'WARN',
-    3: 'ERROR',
-    4: 'FATAL',
-  }
+export const levels: Record<LogLevel, string> = {
+  [LogLevel.DEBUG]: 'DEBUG',
+  [LogLevel.INFO]: 'INFO',
+  [LogLevel.WARN]: 'WARNING',
+  [LogLevel.ERROR]: 'ERROR',
+  [LogLevel.FATAL]: 'FATAL',
+};
 
+export const logMessage = (message: string, level: LogLevel) => {
   if (!levels.hasOwnProperty(level)) {
-    throw new Error(`Invalid log level: ${level} \n Valid levels: ${levels}`);
+    throw new Error(`Invalid log level: ${level} \n Valid levels: ${Object.values(LogLevel)}`);
   }
 
   const splitter = '::';
   const timeStamp = new Date().toUTCString();
-  const logMessage = `[${levels[level]}]:  ${timeStamp} ${splitter} ${message}`;
+  const logLevelName = levels[level];
+  const logMessage = `[${logLevelName}]:  ${timeStamp} ${splitter} ${message}`;
   console.log(logMessage);
-
   // Example:
   // [INFO]:  Fri, 31 Mar 2023 02:19:57 GMT :: test 
 }

@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import { start, tryReward } from './util/';
-import { logMessage, logDiscordEvent, logChannelID } from "./lib/logging";
+import { logMessage, logDiscordEvent, logChannelID, LogLevel, levels,} from "./lib/logging";
 
 import {
   Client,
