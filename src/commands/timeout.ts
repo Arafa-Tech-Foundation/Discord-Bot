@@ -2,7 +2,10 @@ import {
     ChatInputCommandInteraction,
     SlashCommandBuilder,
     PermissionFlagsBits,
+    TextChannel
   } from "discord.js";
+
+import { logChannelID, logDiscordEvent } from "../lib/logging";  // For the future
   
   export default {
     data: new SlashCommandBuilder()
@@ -26,7 +29,4 @@ import {
       const duration = interaction.options.getInteger("duration");
       const hours = duration * 3060 * 1000 // hours * 60 min * 60 sec * 1000ms
       const reason = interaction.options.getString("reason") ?? "no reason provided";
-
-      
-    },
-}
+}};
