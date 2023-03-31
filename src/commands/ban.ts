@@ -34,7 +34,7 @@ export default {
 
     const logChannel = interaction.client.channels.cache.get(logChannelID) as TextChannel;
 
-    let embed = logDiscordEvent(`Banned ${target.username}#${target.tag}`);
+    let embed = logDiscordEvent(`Banned ${target.username}#${target.tag}`);  // Log the event
 
     embed.addFields(
       { name: 'Reason', value: reason },

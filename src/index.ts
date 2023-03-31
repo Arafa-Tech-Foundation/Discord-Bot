@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import { start, tryReward } from './util/';
-import { logMessage, logDiscordEvent, logChannelID, LogLevel, levels,} from "./lib/logging";
+import { logMessage, logDiscordEvent, logChannelID, LogLevel} from "./lib/logging";
 
 import {
   Client,
@@ -137,7 +137,7 @@ client.on('voiceStateUpdate', (oldState, newState) => {
   }
 });
 
-client.on('guildMemberAdd', member => {
+client.on('guildMemberAdd', member => { // When a user joins the server
   logChannel = client.channels.cache.get(logChannelID) as TextChannel;
 
   let embed = logDiscordEvent(`${member.user.username} joined the server`);
@@ -150,7 +150,7 @@ client.on('guildMemberAdd', member => {
 });
 
 
-client.on('guildMemberRemove', member => {
+client.on('guildMemberRemove', member => {  // When a user leaves the server
   logChannel = client.channels.cache.get(logChannelID) as TextChannel;
 
   let embed = logDiscordEvent(`${member.user.username} left the server`);
@@ -162,7 +162,7 @@ client.on('guildMemberRemove', member => {
   logChannel.send({ embeds: [embed] });
 });
 
-client.on('messageDelete', message => {
+client.on('messageDelete', message => { // When a message is deleted
   logChannel = client.channels.cache.get(logChannelID) as TextChannel;
 
   let embed = logDiscordEvent(`${message.author.username} deleted a message`);
@@ -176,7 +176,7 @@ client.on('messageDelete', message => {
 
 });
 
-client.on('messageUpdate', (oldMessage, newMessage) => {
+client.on('messageUpdate', (oldMessage, newMessage) => {  // When a message is edited
   logChannel = client.channels.cache.get(logChannelID) as TextChannel;
 
   let embed = logDiscordEvent(`${oldMessage.author.username} edited a message`);
