@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import { start, tryReward } from './util/';
-import { logMessage, logDiscordEvent, logChannelID, LogLevel, starCount, starboardChannelID } from "./lib/logging";
+import { logMessage, logDiscordEvent, LogLevel, starCount } from "./lib/logging";
 
 import {
   Client,
@@ -106,7 +106,7 @@ client.on(Events.MessageCreate, async (event) => {
 });
 
 client.on('voiceStateUpdate', (oldState, newState) => {
-  logChannel = client.channels.cache.get(logChannelID) as TextChannel;  // Typescript is annoying sometimes
+  logChannel = client.channels.cache.get(process.env.LOG_CHANNEL_ID) as TextChannel;
   if (oldState.channelId == newState.channelId) return; // Ignore if channel didn't change 
   if (!oldState.channelId && newState.channelId) {  // User joined a channel
     let embed = logDiscordEvent(`${newState.member.user.username} joined a voice channel`);
@@ -140,7 +140,7 @@ client.on('voiceStateUpdate', (oldState, newState) => {
 });
 
 client.on('guildMemberAdd', member => { // When a user joins the server
-  logChannel = client.channels.cache.get(logChannelID) as TextChannel;
+  logChannel = client.channels.cache.get(process.env.LOG_CHANNEL_ID) as TextChannel;
 
   let embed = logDiscordEvent(`${member.user.username} joined the server`);
 
@@ -153,7 +153,7 @@ client.on('guildMemberAdd', member => { // When a user joins the server
 
 
 client.on('guildMemberRemove', member => {  // When a user leaves the server
-  logChannel = client.channels.cache.get(logChannelID) as TextChannel;
+  logChannel = client.channels.cache.get(process.env.LOG_CHANNEL_ID) as TextChannel;
 
   let embed = logDiscordEvent(`${member.user.username} left the server`);
 
@@ -165,7 +165,7 @@ client.on('guildMemberRemove', member => {  // When a user leaves the server
 });
 
 client.on('messageDelete', message => { // When a message is deleted
-  logChannel = client.channels.cache.get(logChannelID) as TextChannel;
+  logChannel = client.channels.cache.get(process.env.LOG_CHANNEL_ID) as TextChannel;
 
   let embed = logDiscordEvent(`${message.author.username} deleted a message`);
 
@@ -180,7 +180,7 @@ client.on('messageDelete', message => { // When a message is deleted
 
 client.on('messageUpdate', (oldMessage, newMessage) => {  // When a message is edited
   if (oldMessage.member.id == client.user.id) return; // Ignore if the bot edited the message
-  logChannel = client.channels.cache.get(logChannelID) as TextChannel;
+  logChannel = client.channels.cache.get(process.env.LOG_CHANNEL_ID) as TextChannel;
 
   let embed = logDiscordEvent(`${oldMessage.author.username} edited a message`);
 
@@ -196,9 +196,6 @@ client.on('messageUpdate', (oldMessage, newMessage) => {  // When a message is e
 });
 
 // Starboard, check if a message is starred with a specific amount of stars
-/*
-TODO: Fix the bug where the bot will post the same message twice if the message is starred twice
-*/
 client.on('messageReactionAdd', async (reaction, user) => {
   if (postedStarredMessages.has(reaction.message.id)) {  // Make sure to not post the same message twice
     return;
@@ -223,7 +220,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
   if (reaction.emoji.name === '⭐') {
     if (reaction.count >= starCount) {
-      const starboardChannel = client.channels.cache.get(starboardChannelID) as TextChannel;
+      const starboardChannel = client.channels.cache.get(process.env.STARBOARD_CHANNEL_ID) as TextChannel;
       const embed = logDiscordEvent('Starred Message');
 
       embed.addFields(
@@ -250,7 +247,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
       } else {
         await starboardChannel.send({ embeds: [embed] });
       }
-  
+
       // Add the message to the set of posted starred messages
       postedStarredMessages.add(reaction.message.id);
     }

@@ -5,7 +5,7 @@ import {
   TextChannel,
 } from "discord.js";
 
-import { logDiscordEvent, logChannelID } from "../lib/logging";
+import { logDiscordEvent } from "../lib/logging";
 
 
 export default {
@@ -32,7 +32,7 @@ export default {
 
     await interaction.reply(`Banned ${target.username}#${target.tag}.\nReason: ${reason}`);
 
-    const logChannel = interaction.client.channels.cache.get(logChannelID) as TextChannel;
+    const logChannel = interaction.client.channels.cache.get(process.env.LOG_CHANNEL_ID) as TextChannel;
 
     let embed = logDiscordEvent(`Banned ${target.username}#${target.tag}`);  // Log the event
 
