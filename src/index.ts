@@ -29,6 +29,7 @@ const textCommandFiles = readdirSync(join(cmdPath, "text"));
 const commands = new Collection<string, any>();
 const textCommands = new Collection<string, any>();
 const postedStarredMessages = new Set();  // WARNING: THIS IS PRONE TO ERRORS, IF THE BOT RESTARTS IT WILL LOSE ALL OF ITS DATA, IN THE FUTURE NEED TO USE A DATABASE || Also, this is a set of message IDs
+const blacklisted_starboard_channel_ids = process.env.BLACKLISTED_STARBOARD_CHANNEL_ID.split(',');
 
 let logChannel: TextChannel;
 
@@ -197,9 +198,6 @@ client.on('messageUpdate', (oldMessage, newMessage) => {  // When a message is e
 
 // Starboard, check if a message is starred with a specific amount of stars
 client.on('messageReactionAdd', async (reaction, user) => {
-  if (postedStarredMessages.has(reaction.message.id)) {  // Make sure to not post the same message twice
-    return;
-  }
   if (reaction.partial) {
     try {
       await reaction.fetch();
@@ -216,6 +214,18 @@ client.on('messageReactionAdd', async (reaction, user) => {
       logMessage(`Something went wrong when fetching the message: ${error}`, LogLevel.ERROR);
       return;
     }
+  }
+  if (postedStarredMessages.has(reaction.message.id)) {  // Make sure to not post the same message twice
+    return;
+  }
+
+  try {
+    if (reaction.message.channel.id in blacklisted_starboard_channel_ids) {  // Make sure to not post messages from blacklisted channels
+      return;
+    }
+  } catch (error) {
+    logMessage(`Something went wrong when checking if the channel is blacklisted: ${error}`, LogLevel.ERROR);
+    return;
   }
 
   if (reaction.emoji.name === '⭐') {
@@ -247,7 +257,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
       } else {
         await starboardChannel.send({ embeds: [embed] });
       }
-
+  
       // Add the message to the set of posted starred messages
       postedStarredMessages.add(reaction.message.id);
     }
