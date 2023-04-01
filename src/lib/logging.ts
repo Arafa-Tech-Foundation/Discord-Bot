@@ -2,6 +2,8 @@ import { EmbedBuilder } from "discord.js";
 
 
 export const logChannelID = "";  // Put your channel ID here
+export const starboardChannelID = ""; // ID of the starboard channel
+export const starCount = 5;  // Number of stars needed to get a be put on the starboard; Set to 1 for testing
 
 export const logDiscordEvent = (title: string) => {  // Creates a basic embed for logging discord events
   const embed = new EmbedBuilder()

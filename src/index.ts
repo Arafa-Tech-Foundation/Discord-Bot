@@ -2,14 +2,14 @@ import { config } from "dotenv";
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import { start, tryReward } from './util/';
-import { logMessage, logDiscordEvent, logChannelID, LogLevel} from "./lib/logging";
+import { logMessage, logDiscordEvent, logChannelID, LogLevel, starCount, starboardChannelID } from "./lib/logging";
 
 import {
   Client,
   Events,
   GatewayIntentBits,
   Collection,
-  TextChannel
+  TextChannel,
 } from "discord.js";
 config();
 const PREFIX = "+";
@@ -20,6 +20,7 @@ const client = new Client({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessageReactions,
   ],
 });
 const cmdPath = join(__dirname, "commands");
@@ -27,6 +28,7 @@ const commandFiles = readdirSync(cmdPath);
 const textCommandFiles = readdirSync(join(cmdPath, "text"));
 const commands = new Collection<string, any>();
 const textCommands = new Collection<string, any>();
+const postedStarredMessages = new Set();  // WARNING: THIS IS PRONE TO ERRORS, IF THE BOT RESTARTS IT WILL LOSE ALL OF ITS DATA, IN THE FUTURE NEED TO USE A DATABASE || Also, this is a set of message IDs
 
 let logChannel: TextChannel;
 
@@ -177,6 +179,7 @@ client.on('messageDelete', message => { // When a message is deleted
 });
 
 client.on('messageUpdate', (oldMessage, newMessage) => {  // When a message is edited
+  if (oldMessage.member.id == client.user.id) return; // Ignore if the bot edited the message
   logChannel = client.channels.cache.get(logChannelID) as TextChannel;
 
   let embed = logDiscordEvent(`${oldMessage.author.username} edited a message`);
@@ -190,6 +193,68 @@ client.on('messageUpdate', (oldMessage, newMessage) => {  // When a message is e
 
   logChannel.send({ embeds: [embed] });
 
+});
+
+// Starboard, check if a message is starred with a specific amount of stars
+/*
+TODO: Fix the bug where the bot will post the same message twice if the message is starred twice
+*/
+client.on('messageReactionAdd', async (reaction, user) => {
+  if (postedStarredMessages.has(reaction.message.id)) {  // Make sure to not post the same message twice
+    return;
+  }
+  if (reaction.partial) {
+    try {
+      await reaction.fetch();
+    } catch (error) {
+      logMessage(`Something went wrong when fetching the message: ${error}`, LogLevel.ERROR);
+      return;
+    }
+  }
+
+  if (reaction.message.partial) {
+    try {
+      await reaction.message.fetch();
+    } catch (error) {
+      logMessage(`Something went wrong when fetching the message: ${error}`, LogLevel.ERROR);
+      return;
+    }
+  }
+
+  if (reaction.emoji.name === '⭐') {
+    if (reaction.count >= starCount) {
+      const starboardChannel = client.channels.cache.get(starboardChannelID) as TextChannel;
+      const embed = logDiscordEvent('Starred Message');
+
+      embed.addFields(
+        { name: "Message", value: `[Click Here](https://discord.com/channels/${reaction.message.guild.id}/${reaction.message.channel.id}/${reaction.message.id})`, inline: true },
+        { name: "Author", value: `<@${reaction.message.author.id}>`, inline: true },
+        { name: "Stars", value: `${reaction.count}`, inline: true },
+      )
+
+      if (reaction.message.content.length != 0) {
+        embed.addFields(
+          { name: "Message Content", value: `\`\`\`${reaction.message.content}\`\`\``, inline: false },
+        )
+      }
+
+
+      if (reaction.message.attachments.size > 0) {
+        if (reaction.message.attachments.first().contentType.startsWith("image")) {
+          embed.setImage(reaction.message.attachments.first().url);
+          await starboardChannel.send({ embeds: [embed] });
+        } else {
+          await starboardChannel.send({ embeds: [embed] });
+          await starboardChannel.send({ files: [reaction.message.attachments.first().url] });
+        }
+      } else {
+        await starboardChannel.send({ embeds: [embed] });
+      }
+  
+      // Add the message to the set of posted starred messages
+      postedStarredMessages.add(reaction.message.id);
+    }
+  }
 });
 
 client.login(process.env.TOKEN).then(s => {
