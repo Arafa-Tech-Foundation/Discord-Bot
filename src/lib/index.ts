@@ -1,2 +1,3 @@
-export * from "../lib/database";
-export * from "../lib/chat-reward";
+export * from "./database";
+export * from "./chatReward";
+export * from "./eventHandler";
