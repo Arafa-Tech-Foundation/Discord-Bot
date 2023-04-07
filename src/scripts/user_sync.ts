@@ -2,8 +2,8 @@
 import { config } from "dotenv";
 config();
 import { GuildMember, REST, Routes } from "discord.js";
-import { createUser } from "../util";
-import { getUsers } from "../util";
+import { createUser } from "../lib";
+import { getUsers } from "../lib";
 
 (async () => {
   if (!process.env.TOKEN) throw new Error("TOKEN is not defined!");
