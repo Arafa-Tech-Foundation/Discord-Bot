@@ -1,35 +1,33 @@
 import { EmbedBuilder } from "discord.js";
+import { LogLevel } from "src/types";
+export const starCount = 5; // Number of stars needed to get a be put on the starboard; Set to 1 for testing
 
-
-export const starCount = 5;  // Number of stars needed to get a be put on the starboard; Set to 1 for testing
-
-export const logDiscordEvent = (title: string) => {  // Creates a basic embed for logging discord events
+export const logDiscordEvent = (title: string) => {
+  // Creates a basic embed for logging discord events
   const embed = new EmbedBuilder()
     .setTitle(title)
-    .setColor(0x9328FF) // Purple
+    .setColor(0x9328ff) // Purple
     .setTimestamp(new Date());
 
   return embed;
-}
-export enum LogLevel {
-  DEBUG = "DEBUG",
-  INFO = "INFO",
-  WARN = "WARNING",
-  ERROR = "ERROR",
-  FATAL = "FATAL"
-}
+};
 
-export const logMessage = (message: string, level: LogLevel = LogLevel.DEBUG) => {
+export const logMessage = (
+  message: string,
+  level: LogLevel = LogLevel.DEBUG
+) => {
   // You can specify the log level, but if you don't it will default to DEBUG
   // You have to also import levels and LogLevel
   if (!LogLevel.hasOwnProperty(level)) {
-    throw new Error(`Invalid log level: ${level} \n Valid levels: ${Object.values(LogLevel)}`);
+    throw new Error(
+      `Invalid log level: ${level} \n Valid levels: ${Object.values(LogLevel)}`
+    );
   }
 
-  const splitter = '::';
+  const splitter = "::";
   const timeStamp = new Date().toUTCString();
   const logMessage = `[${level}]:  ${timeStamp} ${splitter} ${message}`;
   console.log(logMessage);
   // Example:
-  // [INFO]:  Fri, 31 Mar 2023 02:19:57 GMT :: test 
-}
+  // [INFO]:  Fri, 31 Mar 2023 02:19:57 GMT :: test
+};
