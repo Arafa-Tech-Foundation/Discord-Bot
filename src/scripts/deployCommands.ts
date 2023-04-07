@@ -12,13 +12,14 @@ import { lstatSync, readdirSync } from "fs";
 
   for (const file of cmdFiles) {
     if (lstatSync(`src/commands/${file}`).isDirectory()) continue; // skip sub-folders
-    const command = (await import(`${__dirname}/../../src/commands/${file}`)).default;
+    const command = (await import(`${__dirname}/../../src/commands/${file}`))
+      .default;
     commands.push(command.data.toJSON());
   }
   const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
   try {
     // const body = (commands.map((command) => command.toJSON()));
-    console.log(
+    logMessage(
       `Started refreshing ${commands.length} application (/) commands.`
     );
 
@@ -28,11 +29,11 @@ import { lstatSync, readdirSync } from "fs";
         process.env.GUILD_ID
       ),
       {
-        body: commands
+        body: commands,
       }
     );
 
-    console.log(
+    logMessage(
       `Successfully reloaded ${data.length} application (/) commands.`
     );
   } catch (error) {

@@ -1,42 +1,23 @@
 import { config } from "dotenv";
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
-import { start, tryReward } from './util/';
-import { createUser } from './util/database';
-
-import {
-  Client,
-  Events,
-  GatewayIntentBits,
-  Collection,
-} from "discord.js";
+import { start } from "./lib/";
+import { Events, Collection } from "discord.js";
+import client from "./client";
+import { tryReward } from "@/lib";
+import { prefix } from "./config";
+import { logMessage } from "@/lib/";
 config();
-const PREFIX = "./";
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.GuildMembers
-  ],
-});
+
 const cmdPath = join(__dirname, "commands");
+const eventsPath = join(__dirname, "events");
+
 const commandFiles = readdirSync(cmdPath);
 const textCommandFiles = readdirSync(join(cmdPath, "text"));
+const eventFiles = readdirSync(eventsPath);
+
 const commands = new Collection<string, any>();
 const textCommands = new Collection<string, any>();
-
-// load slash commands by going through each file in src/commands
-commandFiles.forEach(async (file) => {
-  if ((await lstatSync(join(cmdPath, file))).isDirectory()) return; // skip sub-folders
-
-  const command = (await import(join(cmdPath, file))).default;
-  if (command.data && command.execute) {
-    console.log("Loaded command: " + command.data.name);
-    commands.set(command.data.name, command);
-  }
-});
-
 // load 'text' commands (such as ./exec) located in src/commands/text
 textCommandFiles.forEach(async (file) => {
   const command = (await import(join(cmdPath, "text", file))).default;
@@ -46,6 +27,55 @@ textCommandFiles.forEach(async (file) => {
   }
 });
 
+// load slash commands by going through each file in src/commands
+commandFiles.forEach(async (file) => {
+  if ((await lstatSync(join(cmdPath, file))).isDirectory()) return; // skip sub-folders
+
+  const command = (await import(join(cmdPath, file))).default;
+  if (command.data && command.execute) {
+    logMessage("Loaded command: " + command.data.name);
+    commands.set(command.data.name, command);
+  }
+});
+
+eventFiles.forEach(async (file) => {
+  await import(join(eventsPath, file));
+});
+
+client.on(Events.MessageCreate, async (event) => {
+  /* support either: 
+    ./cmd <stuff>
+    OR
+    ./cmd
+    <stuff>
+    */
+
+  if (event.content.startsWith(prefix)) {
+    const spaceIndex = event.content.indexOf(" ");
+    const newLineIndex = event.content.indexOf("\n");
+    if (spaceIndex == -1 && newLineIndex == -1) {
+      await event.reply("Command not found, or no arguments were provided.");
+      return;
+    }
+    const index =
+      spaceIndex == -1
+        ? newLineIndex
+        : newLineIndex == -1
+        ? spaceIndex
+        : newLineIndex;
+    const textCommandName = event.content.substring(prefix.length, index);
+    const command = textCommands.get(textCommandName);
+    try {
+      await command.execute(event);
+    } catch (error) {
+      await event.reply({
+        content: "There was an error: " + error,
+      });
+    }
+  } else {
+    tryReward(event.author.id);
+  }
+});
 
 // if a slash command was created, run the proper one
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -61,51 +91,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
-client.on(Events.GuildMemberAdd, async (event) => {
-  createUser(event.user.id).catch(error => {
-    if (error.code == 'P2002') {
-      console.log(`${event.user.tag} has joined, but is already in the database.`)
-    }
-  });
+client.login(process.env.TOKEN).then((s) => {
+  logMessage("Logged in as " + client.user.username);
 });
 
-// filter for text commands
-client.on(Events.MessageCreate, async (event) => {
-  /* support either: 
-  ./cmd <stuff>
-  OR
-  ./cmd
-  <stuff>
-  */
-
-  if (event.content.startsWith(PREFIX)) {
-    const spaceIndex = event.content.indexOf(" ");
-    const newLineIndex = event.content.indexOf("\n");
-    if (spaceIndex == -1 && newLineIndex == -1) {
-      await event.reply("Command not found, or no arguments were provided.");
-      return;
-    }
-    const index =
-      spaceIndex == -1
-        ? newLineIndex
-        : newLineIndex == -1
-        ? spaceIndex
-        : newLineIndex;
-    const textCommandName = event.content.substring(PREFIX.length, index);
-    const command = textCommands.get(textCommandName);
-    try {
-      await command.execute(event);
-    } catch (error) {
-      await event.reply({
-        content: "There was an error: " + error,
-      });
-    }
-  } else {
-    tryReward(event.author.id);
-  };
-});
-
-client.login(process.env.TOKEN).then(s => {
-  console.log("Logged in as " + client.user.username)
-})
 start();
