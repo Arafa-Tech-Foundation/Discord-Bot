@@ -2,7 +2,7 @@ import { config } from "dotenv";
 config();
 import { REST, Routes, SlashCommandBuilder } from "discord.js";
 import { lstatSync, readdirSync } from "fs";
-
+import { logMessage } from "@/lib";
 (async () => {
   if (!process.env.TOKEN) throw new Error("TOKEN is not defined!");
   if (!process.env.GUILD_ID) throw new Error("GUILD_ID is not defined!");
