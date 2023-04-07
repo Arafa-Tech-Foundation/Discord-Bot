@@ -9,7 +9,7 @@ import { getUsers } from "../lib";
   if (!process.env.TOKEN) throw new Error("TOKEN is not defined!");
   if (!process.env.GUILD_ID) throw new Error("GUILD_ID is not defined!");
 
-  console.log("Fetching database rows...");
+  logMessage("Fetching database rows...");
   const users = await getUsers();
   const dbUserIds = users.map((user) => user.id);
   const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
@@ -22,7 +22,7 @@ import { getUsers } from "../lib";
     if (!(member.user.id in dbUserIds)) {
       // TODO: ensure bots don't get added
       const newUser = await createUser(member.user.id);
-      console.log(`Created user: ${member.user.id} (${member.user.username})`);
+      logMessage(`Created user: ${member.user.id} (${member.user.username})`);
     }
   });
 })();

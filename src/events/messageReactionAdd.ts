@@ -50,6 +50,7 @@ const starboard = async (reaction, user) => {
     return;
   }
 
+  logMessage("star!!!");
   if (reaction.emoji.name === "⭐") {
     if (reaction.count >= starCount) {
       const starboardChannel = client.channels.cache.get(

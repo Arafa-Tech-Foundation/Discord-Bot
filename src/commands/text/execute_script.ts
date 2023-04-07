@@ -57,7 +57,6 @@ export default {
     };
 
     const response = await axios.request(options);
-    console.log(response);
     let output = "";
     if (response.data.stdout) {
       output += "Output: ```" + response.data.stdout + "```\n";

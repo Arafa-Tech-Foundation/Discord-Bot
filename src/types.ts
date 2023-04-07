@@ -1,4 +1,4 @@
-import { Client, ClientEvents, Events } from "discord.js";
+import { ClientEvents } from "discord.js";
 export enum LogLevel {
   DEBUG = "DEBUG",
   INFO = "INFO",
