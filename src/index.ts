@@ -54,8 +54,20 @@ client.on(Events.MessageCreate, async (event) => {
     const spaceIndex = event.content.indexOf(" ");
     const newLineIndex = event.content.indexOf("\n");
     if (spaceIndex == -1 && newLineIndex == -1) {
-      await event.reply("Command not found, or no arguments were provided.");
-      return;
+      const textCommandName = event.content.substring(prefix.length);
+      const command = textCommands.get(textCommandName);
+      if (!command) {
+        await event.reply("Command not found, or no arguments were provided.");
+        return;
+      }
+      try {
+        await command.execute(event);
+      } catch (error) {
+        await event.reply({
+          content: "There was an error: " + error,
+        });
+        return;
+      }
     }
     const index =
       spaceIndex == -1
