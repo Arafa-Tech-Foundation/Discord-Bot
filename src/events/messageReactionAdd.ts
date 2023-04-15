@@ -1,8 +1,9 @@
 import { logDiscordEvent, logMessage } from "@/lib/logging";
 import { LogLevel } from "@/types";
 import { starCount } from "@/config";
-import { TextChannel, Events, MessageReaction, User } from "discord.js";
+import { TextChannel, Events, MessageReaction, User, EmbedBuilder } from "discord.js";
 import { reactionRoleMessages } from "../commands/reactionRoles";
+import { dmOnReaction } from "src/commands/reactionRoles";
 import client from "@/client";
 import defineEventHandler from "@/lib/eventHandler";
 const postedStarredMessages = new Set(); // WARNING: THIS IS PRONE TO ERRORS, IF THE BOT RESTARTS IT WILL LOSE ALL OF ITS DATA, IN THE FUTURE NEED TO USE A DATABASE || Also, this is a set of message IDs
@@ -110,7 +111,7 @@ const reactionAdd = async (reaction: MessageReaction, user: User) => {
       const emojis = Object.keys(reactionRoleMessage.roles);
 
       for (const emoji of emojis) {
-        if (emoji === reaction.emoji.id) {
+        if (emoji === reaction.emoji.name) {
           const role = reaction.message.guild.roles.cache.get(reactionRoleMessage.roles[emoji]);
 
           if (!role) {
@@ -126,6 +127,23 @@ const reactionAdd = async (reaction: MessageReaction, user: User) => {
           }
 
           await member.roles.add(role);
+
+          // Send a DM to the user
+
+          if (dmOnReaction) {
+            const dm = await member.createDM();
+            const embed = new EmbedBuilder()
+              .setTitle("Added Role")
+              .setColor(0x00ff00) // green
+              .setDescription(`You have been given the role **${role.name}** in the server: **${role.guild.name}** !`)
+              .setTimestamp(new Date());
+            
+            try {
+              await dm.send({ embeds: [embed] });
+            } catch (error) {
+              logMessage(`Something went wrong when sending a DM to ${member.user.tag}: ${error}`, LogLevel.ERROR);
+            }
+          }
         }
       }
     }

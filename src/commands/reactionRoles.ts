@@ -5,6 +5,7 @@ import {
 } from "discord.js";
 
 import { logMessage } from "@/lib/";
+import { LogLevel } from "@/types";
 
 export interface ReactionRoleMessage {
   message: Message;
@@ -14,6 +15,8 @@ export interface ReactionRoleMessage {
 const reactionRoleMessages = new Set<ReactionRoleMessage>(); // Temporary, in the future use prisma!
 
 export { reactionRoleMessages };
+
+export const dmOnReaction: boolean = true;
 
 export default {
   data: new SlashCommandBuilder()
@@ -81,7 +84,7 @@ export default {
         sentMessage.react(emoji);
         reactionRoleMessages.add({ message: sentMessage, roles: rolesEmojiDict });      
       } catch (error) {
-        logMessage(`Couldn't add reaction '${emoji}'`);
+        logMessage(`Couldn't add reaction '${emoji}'`, LogLevel.ERROR);
       }
     }
   }
