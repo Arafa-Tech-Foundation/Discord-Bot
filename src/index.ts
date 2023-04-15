@@ -62,6 +62,7 @@ client.on(Events.MessageCreate, async (event) => {
       }
       try {
         await command.execute(event);
+        return;
       } catch (error) {
         await event.reply({
           content: "There was an error: " + error,
@@ -79,14 +80,15 @@ client.on(Events.MessageCreate, async (event) => {
     const command = textCommands.get(textCommandName);
     try {
       await command.execute(event);
+      return;
     } catch (error) {
       await event.reply({
-        content: "There was an error: " + error,
+        content: "There was an error in: " + error,
       });
     }
   } else {
-    tryReward(event.author.id, 'currency');
-    tryReward(event.author.id, 'xp');
+    tryReward(event.author.id, "currency");
+    tryReward(event.author.id, "xp");
   }
 });
 
