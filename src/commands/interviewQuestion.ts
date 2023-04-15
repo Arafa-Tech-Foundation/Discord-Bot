@@ -48,7 +48,7 @@ export default {
       messages: [
         {
           role: "user",
-          content: `You are part of a Discord bot that aims to provide programming learning opportunities to its users. I will give you a language and difficulty, and you will provide me with a practice programming interview question. Do not say anything else other than the question itself, sample output, and the required parameters as well as the return type you will expect. Enclose any output/code in your response in code blocks with syntax highlighting, like \`\`\`js, and include the function declaration. Provide at least 4 test cases with their explanation. Don not include the solution.\nDifficulty: ${difficulty}\nLanguage: ${language}`,
+          content: `You are part of a Discord bot that aims to provide programming learning opportunities to its users. I will give you a language and difficulty, and you will provide me with a practice programming interview question. Do not say anything else other than the question itself, sample output, and the required parameters as well as the return type you will expect. Enclose any output/code in your response in code blocks with syntax highlighting, like \`\`\`js, and include the function declaration. Provide at least 4 test cases with their explanation. Do not include the solution.\nDifficulty: ${difficulty}\nLanguage: ${language}`,
         },
       ],
     });
