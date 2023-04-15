@@ -85,7 +85,8 @@ client.on(Events.MessageCreate, async (event) => {
       });
     }
   } else {
-    tryReward(event.author.id);
+    tryReward(event.author.id, 'currency');
+    tryReward(event.author.id, 'xp');
   }
 });
 
