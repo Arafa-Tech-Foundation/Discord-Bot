@@ -1,41 +1,78 @@
-import { updateUsers } from "./database";
-const rewarded = new Map();
-const dueRewards = new Map();
+import { updateUsers } from './database';
 
-const rewardCooldown = 30; // seconds
-const updateCooldown = 60 * 5; // seconds
-const rewardAmount = 1; // currency
+const updateCooldown: number = 6; // seconds
+const rewardConfig: Record<string, object> = {
+    xp: {
+        amount: (id: string) => { return 1 }, 
+        cooldown: 0
+    },
 
-function getGroups(): Record<string, string[]> {
-  const groups = {};
-  for (const due of dueRewards) {
-    if (groups[due[1]]) groups[due[1]].push(due[0]);
-    else groups[due[1]] = [due[0]];
-  }
-  return groups;
+    currency: {
+        amount: (id: string) => { return 1 },
+        cooldown: 1
+    }
+};
+let toReward: Record<string, object> = {};
+
+function createLog(id: string): void {
+    toReward[id] = {};
+    for (const rewardType in rewardConfig) {
+        toReward[id][rewardType] = {
+            amount: 0,
+            cooldownActive: false
+        };
+    }
 }
 
-export function tryReward(id: string): void {
-  if (rewarded.get(id) == undefined) {
-    rewarded.set(id, true);
-    setTimeout(() => rewarded.delete(id), rewardCooldown * 1000);
-    dueRewards.set(id, dueRewards.get(id) + rewardAmount || 1);
-  }
+function getGroups(): Record<string, Array<string>> {
+    const groups = {};
+
+    for (const id in toReward) {
+        for (const rewardType in toReward[id]) {
+            const amount = toReward[id][rewardType]['amount'];
+            if (amount === 0) continue;
+            if (!groups[rewardType]) groups[rewardType] = {};
+
+            if (groups[rewardType][amount]) {
+                groups[rewardType][amount].push(id);
+            } else {
+                groups[rewardType][amount] = [id];
+            }
+        }
+    }
+    
+    return groups;
 }
+
+export function tryReward(id: string, rewardType: string): void {
+    if (!toReward[id]) createLog(id);
+    const rewardTypeData = toReward[id][rewardType];
+    if (rewardTypeData['cooldownActive'] === false) {
+        rewardTypeData['cooldownActive'] = true;
+        setTimeout(() => {
+            rewardTypeData['cooldownActive'] = false;
+        }, rewardConfig[rewardType]['cooldown']);
+
+        rewardTypeData['amount'] += rewardConfig[rewardType]['amount'](id)
+    }
+};
 
 export function start(): void {
-  function update(): void {
-    const groups = getGroups();
-    for (const rewardAmt in groups) {
-      const ids = groups[rewardAmt];
-      updateUsers(ids, {
-        currency: {
-          increment: Number(rewardAmt),
-        },
-      });
+    function update(): void {
+        const groups = getGroups();
+        for (const rewardType in groups) {
+            const group = groups[rewardType];
+            for (const amount in group) {
+                updateUsers([...group[amount]], {
+                    [rewardType]: {
+                        increment: Number(amount)
+                    }
+                })
+            }
+        }
+        toReward = {};
+
+        setTimeout(update, updateCooldown * 1000);
     }
-    dueRewards.clear();
-    setTimeout(update, updateCooldown * 1000);
-  }
-  update();
-}
+    update();
+};
