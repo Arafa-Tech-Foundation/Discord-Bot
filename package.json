@@ -6,7 +6,7 @@
     "deploy": "ts-node -r tsconfig-paths/register src/scripts/deployCommands.ts"
   },
   "dependencies": {
-    "@prisma/client": "^4.12.0",
+    "@prisma/client": "^4.13.0",
     "axios": "^1.3.5",
     "discord.js": "^14.9.0",
     "moment": "^2.29.4",
