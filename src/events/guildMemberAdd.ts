@@ -1,22 +1,56 @@
 import client from "@/client";
 import defineEventHandler from "@/lib/eventHandler";
 import { logDiscordEvent } from "@/lib/logging";
-import { Events, TextChannel } from "discord.js";
-const handler = (member) => {
+import { Events, TextChannel, EmbedBuilder, GuildMember } from "discord.js";
+const handler = (member: GuildMember) => {
   // When a user joins the server
   const logChannel = client.channels.cache.get(
     process.env.LOG_CHANNEL_ID
   ) as TextChannel;
 
-  let embed = logDiscordEvent(`${member.user.username} joined the server`);
+  const welcomeChannel = client.channels.cache.get(
+    process.env.WELCOME_CHANNEL_ID
+  ) as TextChannel;
 
-  embed.addFields({
+  // Log the event
+  let logEmbed = logDiscordEvent(`${member.user.username} joined the server`);
+
+  logEmbed.addFields({
     name: "User",
     value: `<@${member.user.id}>`,
     inline: true,
   });
 
-  logChannel.send({ embeds: [embed] });
+  logChannel.send({ embeds: [logEmbed] });
+
+  // Send a welcome message
+
+  // Check if the user has a avatar
+  
+  let avatar;
+
+  if (member.user.displayAvatarURL() == null) {
+    // If the user doesn't have a avatar, just use default
+    avatar = member.user.defaultAvatarURL;
+  } else {
+    // If the user has a avatar, use that
+    avatar = member.user.displayAvatarURL();
+  }
+
+  let welcomeEmbed = new EmbedBuilder()
+    .setTitle(`👋 Welcome to Arafa Tech, ${member.user.username}!`)
+    .setDescription(
+      `Remember to read the <#1072250815164719184>, and enjoy your stay!`
+  )
+    .setColor(0x9328ff)
+    .setTimestamp(new Date())
+    .setThumbnail(avatar);
+  
+  // I know this is a mess, sorry...
+  welcomeEmbed.addFields(
+    {name: "Things to do", value: "1. Say hello in <#1072403989267751003>\n2. Explore your passion for code in <#1075529693253603418>\n3. Feeling shy? Introduce yourself in <#1072674887300305018>\n4. Need help? Get help in your respective channels: <#1072413228543512596>, <#1072413306448531468>, <#1072413467241357312>, or <#1072413603673681940>"}
+  )
+  welcomeChannel.send({ embeds: [welcomeEmbed] });
 };
 
 export default defineEventHandler({
