@@ -86,7 +86,7 @@ client.on(Events.MessageCreate, async (event) => {
       });
     }
   } else if (!event.author.bot) {
-    rewardUser(event.author.id, {xp: 200, currency: 1})
+    rewardUser(event.author.id, {xp: 1, currency: 1})
     .then((newLevel) => {
       if (newLevel) {
         event.channel.send(
