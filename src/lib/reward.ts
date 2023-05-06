@@ -31,7 +31,7 @@ export const rewardUser = (id: string, rewardData: Partial<RewardData>): Promise
 export const buildLevelUpEmbed = (user: string, level: number) => {
     return new EmbedBuilder()
         .setDescription(`${user} has leveled up to ${level}!`)
-        .setColor(0xa38cff)
+        .setColor(0xFF5F6D)
 };
 
 interface RewardData {
