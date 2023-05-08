@@ -1,10 +1,9 @@
 import { config } from "dotenv";
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
-import { start } from "./lib/";
 import { Events, Collection } from "discord.js";
 import client from "./client";
-import { tryReward } from "@/lib";
+import { rewardUser, buildLevelUpEmbed } from "@/lib/";
 import { prefix } from "./config";
 import { logMessage } from "@/lib/";
 config();
@@ -86,9 +85,15 @@ client.on(Events.MessageCreate, async (event) => {
         content: "There was an error in: " + error,
       });
     }
-  } else {
-    tryReward(event.author.id, "currency");
-    tryReward(event.author.id, "xp");
+  } else if (!event.author.bot) {
+    rewardUser(event.author.id, {xp: 1, currency: 1})
+    .then((newLevel) => {
+      if (newLevel) {
+        event.channel.send(
+          {embeds: [buildLevelUpEmbed(event.author.tag, newLevel)]}
+        );
+      }
+    })
   }
 });
 
@@ -109,5 +114,3 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.login(process.env.TOKEN).then((s) => {
   logMessage("Logged in as " + client.user.username);
 });
-
-start();

@@ -24,3 +24,12 @@ export const updateUsers = async (ids: string[], data: Record<string, any>): Pro
     data: data
   });
 };
+
+export const updateUser = async (id: string, data: Record<string, any>): Promise<any> => {
+  return await prisma.user.update({
+    where: {
+      ['id']: id
+    },
+    data: data
+  });
+};
