@@ -1,9 +1,9 @@
 import defineEventHandler from "@/lib/eventHandler";
 import { logDiscordEvent } from "@/lib/logging";
-import { Events, TextChannel } from "discord.js";
+import { Events, TextChannel, VoiceState } from "discord.js";
 import client from "@/client";
 
-const onVoiceUpdate = (oldState, newState) => {
+const onVoiceUpdate = (oldState: VoiceState, newState: VoiceState) => {
   const logChannel = client.channels.cache.get(
     process.env.LOG_CHANNEL_ID
   ) as TextChannel;

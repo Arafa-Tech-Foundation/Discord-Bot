@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { LogLevel } from "src/types";
+import { LogLevel } from "@/types";
 export const starCount = 5; // Number of stars needed to get a be put on the starboard; Set to 1 for testing
 
 export const logDiscordEvent = (title: string) => {

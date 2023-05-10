@@ -1,7 +1,13 @@
 import { logDiscordEvent, logMessage } from "@/lib/logging";
 import { LogLevel } from "@/types";
 import { starCount } from "@/config";
-import { TextChannel, Events, MessageReaction, User, EmbedBuilder } from "discord.js";
+import {
+  TextChannel,
+  Events,
+  MessageReaction,
+  User,
+  EmbedBuilder,
+} from "discord.js";
 import { reactionRoleMessages } from "../commands/reactionRoles";
 import { dmOnReaction } from "src/commands/reactionRoles";
 import client from "@/client";
@@ -17,7 +23,7 @@ const reactionAdd = async (reaction: MessageReaction, user: User) => {
     } catch (error) {
       logMessage(
         `Something went wrong when fetching the message: ${error}`,
-        LogLevel.ERROR
+        LogLevel.ERROR,
       );
       return;
     }
@@ -29,7 +35,7 @@ const reactionAdd = async (reaction: MessageReaction, user: User) => {
     } catch (error) {
       logMessage(
         `Something went wrong when fetching the message: ${error}`,
-        LogLevel.ERROR
+        LogLevel.ERROR,
       );
       return;
     }
@@ -47,17 +53,16 @@ const reactionAdd = async (reaction: MessageReaction, user: User) => {
   } catch (error) {
     logMessage(
       `Something went wrong when checking if the channel is blacklisted: ${error}`,
-      LogLevel.ERROR
+      LogLevel.ERROR,
     );
     return;
   }
-
 
   if (reaction.emoji.name === "⭐") {
     logMessage("star!!!");
     if (reaction.count >= starCount) {
       const starboardChannel = client.channels.cache.get(
-        process.env.STARBOARD_CHANNEL_ID
+        process.env.STARBOARD_CHANNEL_ID,
       ) as TextChannel;
       const embed = logDiscordEvent("Starred Message");
 
@@ -72,7 +77,7 @@ const reactionAdd = async (reaction: MessageReaction, user: User) => {
           value: `<@${reaction.message.author.id}>`,
           inline: true,
         },
-        { name: "Stars", value: `${reaction.count}`, inline: true }
+        { name: "Stars", value: `${reaction.count}`, inline: true },
       );
 
       if (reaction.message.content.length != 0) {
@@ -112,7 +117,9 @@ const reactionAdd = async (reaction: MessageReaction, user: User) => {
 
       for (const emoji of emojis) {
         if (emoji === reaction.emoji.name) {
-          const role = reaction.message.guild.roles.cache.get(reactionRoleMessage.roles[emoji]);
+          const role = reaction.message.guild.roles.cache.get(
+            reactionRoleMessage.roles[emoji],
+          );
 
           if (!role) {
             return;
@@ -135,13 +142,18 @@ const reactionAdd = async (reaction: MessageReaction, user: User) => {
             const embed = new EmbedBuilder()
               .setTitle("Added Role")
               .setColor(0x00ff00) // green
-              .setDescription(`You have been given the role **${role.name}** in the server: **${role.guild.name}** !`)
+              .setDescription(
+                `You have been given the role **${role.name}** in the server: **${role.guild.name}** !`,
+              )
               .setTimestamp(new Date());
-            
+
             try {
               await dm.send({ embeds: [embed] });
             } catch (error) {
-              logMessage(`Something went wrong when sending a DM to ${member.user.tag}: ${error}`, LogLevel.ERROR);
+              logMessage(
+                `Something went wrong when sending a DM to ${member.user.tag}: ${error}`,
+                LogLevel.ERROR,
+              );
             }
           }
         }

@@ -20,21 +20,21 @@ import { logMessage } from "@/lib";
   try {
     // const body = (commands.map((command) => command.toJSON()));
     logMessage(
-      `Started refreshing ${commands.length} application (/) commands.`
+      `Started refreshing ${commands.length} application (/) commands.`,
     );
 
     const data: any = await rest.put(
       Routes.applicationGuildCommands(
         process.env.CLIENT_ID,
-        process.env.GUILD_ID
+        process.env.GUILD_ID,
       ),
       {
         body: commands,
-      }
+      },
     );
 
     logMessage(
-      `Successfully reloaded ${data.length} application (/) commands.`
+      `Successfully reloaded ${data.length} application (/) commands.`,
     );
   } catch (error) {
     console.error(error);
