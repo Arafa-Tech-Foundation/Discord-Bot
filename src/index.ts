@@ -11,8 +11,7 @@ config();
 
 process.on("uncaughtException", function (err) {
   logMessage(err.message, LogLevel.ERROR);
-  console.log(err.cause);
-  console.log(err.stack);
+  logMessage(err.stack, LogLevel.ERROR);
 });
 const cmdPath = join(__dirname, "commands");
 const eventsPath = join(__dirname, "events");
