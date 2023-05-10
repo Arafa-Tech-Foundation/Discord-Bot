@@ -6,8 +6,12 @@ import client from "./client";
 import { rewardUser, buildLevelUpEmbed } from "@/lib/";
 import { prefix } from "./config";
 import { logMessage } from "@/lib/";
+import { LogLevel } from "./types";
 config();
 
+process.on("uncaughtException", function (err) {
+  logMessage(err.message, LogLevel.ERROR);
+});
 const cmdPath = join(__dirname, "commands");
 const eventsPath = join(__dirname, "events");
 
@@ -59,7 +63,7 @@ client.on(Events.MessageCreate, async (message: Message) => {
       const command = textCommands.get(textCommandName);
       if (!command) {
         await message.reply(
-          "Command not found, or no arguments were provided.",
+          "Command not found, or no arguments were provided."
         );
         return;
       }
