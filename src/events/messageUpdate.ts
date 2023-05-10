@@ -2,12 +2,13 @@ import client from "@/client";
 import defineEventHandler from "@/lib/eventHandler";
 import { logDiscordEvent } from "@/lib/logging";
 import { Events, TextChannel } from "discord.js";
+import { logChannelID } from "@/config";
 
 const onUpdate = (oldMessage, newMessage) => {
   // When a message is edited
   if (oldMessage.member.id == client.user.id) return; // Ignore if the bot edited the message
   const logChannel = client.channels.cache.get(
-    process.env.LOG_CHANNEL_ID
+    logChannelID
   ) as TextChannel;
 
   let embed = logDiscordEvent(`${oldMessage.author.username} edited a message`);

@@ -2,12 +2,15 @@ import client from "@/client";
 import defineEventHandler from "@/lib/eventHandler";
 import { logDiscordEvent } from "@/lib/logging";
 import { Events, TextChannel } from "discord.js";
+import { logChannelID } from "@/config";
 
 const onMessageDelete = (message) => {
   // When a message is deleted
   const logChannel = client.channels.cache.get(
-    process.env.LOG_CHANNEL_ID
+    logChannelID
   ) as TextChannel;
+
+  if (message.author.bot) return;
 
   let embed = logDiscordEvent(`${message.author.username} deleted a message`);
 

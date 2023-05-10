@@ -4,11 +4,13 @@ import { starCount } from "@/config";
 import { TextChannel, Events, MessageReaction, User, EmbedBuilder } from "discord.js";
 import { reactionRoleMessages } from "../commands/reactionRoles";
 import { dmOnReaction } from "src/commands/reactionRoles";
+import { logChannelID, starboardChannelID } from "@/config";
 import client from "@/client";
 import defineEventHandler from "@/lib/eventHandler";
+
+
 const postedStarredMessages = new Set(); // WARNING: THIS IS PRONE TO ERRORS, IF THE BOT RESTARTS IT WILL LOSE ALL OF ITS DATA, IN THE FUTURE NEED TO USE A DATABASE || Also, this is a set of message IDs
-const blacklisted_starboard_channel_ids =
-  process.env.BLACKLISTED_STARBOARD_CHANNEL_ID.split(",");
+const blacklisted_starboard_channel_ids = logChannelID.split(",");
 
 const reactionAdd = async (reaction: MessageReaction, user: User) => {
   if (reaction.partial) {
@@ -57,7 +59,7 @@ const reactionAdd = async (reaction: MessageReaction, user: User) => {
     logMessage("star!!!");
     if (reaction.count >= starCount) {
       const starboardChannel = client.channels.cache.get(
-        process.env.STARBOARD_CHANNEL_ID
+        starboardChannelID
       ) as TextChannel;
       const embed = logDiscordEvent("Starred Message");
 

@@ -3,9 +3,10 @@ config();
 import { REST, Routes, SlashCommandBuilder } from "discord.js";
 import { lstatSync, readdirSync } from "fs";
 import { logMessage } from "@/lib";
+import { guildID, botID } from "@/config";
 (async () => {
   if (!process.env.TOKEN) throw new Error("TOKEN is not defined!");
-  if (!process.env.GUILD_ID) throw new Error("GUILD_ID is not defined!");
+  if (!guildID) throw new Error("GUILD_ID is not defined!");
 
   const commands: SlashCommandBuilder[] = [];
   const cmdFiles = readdirSync("src/commands");
@@ -25,8 +26,8 @@ import { logMessage } from "@/lib";
 
     const data: any = await rest.put(
       Routes.applicationGuildCommands(
-        process.env.CLIENT_ID,
-        process.env.GUILD_ID
+        botID,
+        guildID
       ),
       {
         body: commands,
