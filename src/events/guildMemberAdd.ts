@@ -2,15 +2,16 @@ import client from "@/client";
 import defineEventHandler from "@/lib/eventHandler";
 import { logDiscordEvent } from "@/lib/logging";
 import { Events, TextChannel, EmbedBuilder, GuildMember } from "discord.js";
+import { logChannelID, welcomeChannelID } from "@/config";
 
 const handler = (member: GuildMember) => {
   // When a user joins the server
   const logChannel = client.channels.cache.get(
-    process.env.LOG_CHANNEL_ID
+    logChannelID
   ) as TextChannel;
 
   const welcomeChannel = client.channels.cache.get(
-    process.env.WELCOME_CHANNEL_ID
+    welcomeChannelID
   ) as TextChannel;
 
   // Log the event
