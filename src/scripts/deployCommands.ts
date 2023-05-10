@@ -21,7 +21,7 @@ import { guildID, botID } from "@/config";
   try {
     // const body = (commands.map((command) => command.toJSON()));
     logMessage(
-      `Started refreshing ${commands.length} application (/) commands.`
+      `Started refreshing ${commands.length} application (/) commands.`,
     );
 
     const data: any = await rest.put(
@@ -31,11 +31,11 @@ import { guildID, botID } from "@/config";
       ),
       {
         body: commands,
-      }
+      },
     );
 
     logMessage(
-      `Successfully reloaded ${data.length} application (/) commands.`
+      `Successfully reloaded ${data.length} application (/) commands.`,
     );
   } catch (error) {
     console.error(error);

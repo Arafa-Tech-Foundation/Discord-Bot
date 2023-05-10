@@ -1,10 +1,9 @@
 import { config } from "dotenv";
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
-import { start } from "./lib/";
-import { Events, Collection } from "discord.js";
+import { Events, Collection, Message } from "discord.js";
 import client from "./client";
-import { tryReward } from "@/lib";
+import { rewardUser, buildLevelUpEmbed } from "@/lib/";
 import { prefix } from "./config";
 import { logMessage } from "@/lib/";
 config();
@@ -29,7 +28,7 @@ textCommandFiles.forEach(async (file) => {
 
 // load slash commands by going through each file in src/commands
 commandFiles.forEach(async (file) => {
-  if ((await lstatSync(join(cmdPath, file))).isDirectory()) return; // skip sub-folders
+  if (lstatSync(join(cmdPath, file)).isDirectory()) return; // skip sub-folders
 
   const command = (await import(join(cmdPath, file))).default;
   if (command.data && command.execute) {
@@ -42,7 +41,7 @@ eventFiles.forEach(async (file) => {
   await import(join(eventsPath, file));
 });
 
-client.on(Events.MessageCreate, async (event) => {
+client.on(Events.MessageCreate, async (message: Message) => {
   /* support either: 
     ./cmd <stuff>
     OR
@@ -50,21 +49,25 @@ client.on(Events.MessageCreate, async (event) => {
     <stuff>
     */
 
-  if (event.content.startsWith(prefix)) {
-    const spaceIndex = event.content.indexOf(" ");
-    const newLineIndex = event.content.indexOf("\n");
+  if (message.author.bot) return;
+
+  if (message.content.startsWith(prefix)) {
+    const spaceIndex = message.content.indexOf(" ");
+    const newLineIndex = message.content.indexOf("\n");
     if (spaceIndex == -1 && newLineIndex == -1) {
-      const textCommandName = event.content.substring(prefix.length);
+      const textCommandName = message.content.substring(prefix.length);
       const command = textCommands.get(textCommandName);
       if (!command) {
-        await event.reply("Command not found, or no arguments were provided.");
+        await message.reply(
+          "Command not found, or no arguments were provided.",
+        );
         return;
       }
       try {
-        await command.execute(event);
+        await command.execute(message);
         return;
       } catch (error) {
-        await event.reply({
+        await message.reply({
           content: "There was an error: " + error,
         });
         return;
@@ -76,19 +79,24 @@ client.on(Events.MessageCreate, async (event) => {
         : newLineIndex == -1
         ? spaceIndex
         : newLineIndex;
-    const textCommandName = event.content.substring(prefix.length, index);
+    const textCommandName = message.content.substring(prefix.length, index);
     const command = textCommands.get(textCommandName);
     try {
-      await command.execute(event);
+      await command.execute(message);
       return;
     } catch (error) {
-      await event.reply({
+      await message.reply({
         content: "There was an error in: " + error,
       });
     }
-  } else {
-    tryReward(event.author.id, "currency");
-    tryReward(event.author.id, "xp");
+  }
+
+  const newLevel = await rewardUser(message.author.id, { xp: 1, currency: 1 });
+
+  if (newLevel) {
+    message.channel.send({
+      embeds: [buildLevelUpEmbed(message.author, newLevel)],
+    });
   }
 });
 
@@ -109,5 +117,3 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.login(process.env.TOKEN).then((s) => {
   logMessage("Logged in as " + client.user.username);
 });
-
-start();

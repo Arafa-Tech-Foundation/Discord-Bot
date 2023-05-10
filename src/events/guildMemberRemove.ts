@@ -1,10 +1,10 @@
 import client from "@/client";
 import defineEventHandler from "@/lib/eventHandler";
 import { logDiscordEvent } from "@/lib/logging";
-import { Events, TextChannel, EmbedBuilder } from "discord.js";
+import { Events, TextChannel, EmbedBuilder, GuildMember, PartialGuildMember } from "discord.js";
 import { logChannelID, welcomeChannelID } from "@/config";
 
-const onGuildMemberRemove = (member) => {
+const onGuildMemberRemove = (member: GuildMember | PartialGuildMember) => {
   // When a user leaves the server
   const logChannel = client.channels.cache.get(
     logChannelID
@@ -23,11 +23,11 @@ const onGuildMemberRemove = (member) => {
   });
 
   logChannel.send({ embeds: [embed] });
-  
+
   // Send a goodbye message
 
   // Check if the user has a avatar
-  
+
   let avatar;
 
   if (member.user.displayAvatarURL() == null) {

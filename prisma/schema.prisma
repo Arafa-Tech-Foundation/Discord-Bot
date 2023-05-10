@@ -17,3 +17,9 @@ model User {
   created   DateTime  @default(now())
   joined    DateTime  @default(now())
 }
+
+model SkullMessage {
+  id        Int   @id @default(autoincrement())
+  amount    Int   @default(1)
+  created   DateTime @default(now())
+}

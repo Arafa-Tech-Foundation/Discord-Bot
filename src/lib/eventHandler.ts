@@ -10,7 +10,7 @@ const defineEventHandler = (options: EventHandlerOptions) => {
 
   logMessage(
     `Attached handler to event: ${options.event.toString()}`,
-    LogLevel.INFO
+    LogLevel.INFO,
   );
 };
 

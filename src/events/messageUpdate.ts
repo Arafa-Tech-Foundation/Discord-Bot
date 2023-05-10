@@ -1,10 +1,10 @@
 import client from "@/client";
 import defineEventHandler from "@/lib/eventHandler";
 import { logDiscordEvent } from "@/lib/logging";
-import { Events, TextChannel } from "discord.js";
+import { Events, Message, TextChannel } from "discord.js";
 import { logChannelID } from "@/config";
 
-const onUpdate = (oldMessage, newMessage) => {
+const onUpdate = (oldMessage: Message, newMessage: Message) => {
   // When a message is edited
   if (oldMessage.member.id == client.user.id) return; // Ignore if the bot edited the message
   const logChannel = client.channels.cache.get(
@@ -29,7 +29,7 @@ const onUpdate = (oldMessage, newMessage) => {
       name: "New Message",
       value: `\`\`\`${newMessage.content}\`\`\``,
       inline: false,
-    }
+    },
   );
 
   logChannel.send({ embeds: [embed] });
