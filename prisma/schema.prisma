@@ -11,9 +11,15 @@ datasource db {
 }
 
 model User {
-  id        String   @id
+  id        String   @id @unique
   xp        Int   @default(0)
   currency  Int   @default(0)
   created   DateTime  @default(now())
   joined    DateTime  @default(now())
+}
+
+model SkullMessage {
+  id        Int   @id @unique @default(autoincrement())
+  amount    Int   @default(1)
+  created   DateTime @default(now())
 }

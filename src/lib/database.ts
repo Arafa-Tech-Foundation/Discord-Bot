@@ -1,26 +1,35 @@
-import { PrismaClient, Prisma, User } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // do db stuff
-export const createUser = async (id: string): Promise<User> => {
-  return await prisma.user.create({
+export const createUser = async (id: string) => {
+  return prisma.user.create({
     data: {
       id,
     },
   });
 };
 
-export const getUsers = async (): Promise<User[]> => {
-  return await await prisma.user.findMany();
+export const getUsers = async () => {
+  return prisma.user.findMany();
 };
 
-export const updateUsers = async (ids: string[], data: Record<string, any>): Promise<any> => {
-  return await prisma.user.updateMany({
+export const updateUsers = async (ids: string[], data: Partial<User>) => {
+  return prisma.user.updateMany({
     where: {
       id: {
-        in: ids
-      }
+        in: ids,
+      },
     },
-    data: data
+    data: data,
+  });
+};
+
+export const updateUser = async (id: string, data: Partial<User>) => {
+  return prisma.user.update({
+    where: {
+      ["id"]: id,
+    },
+    data: data,
   });
 };

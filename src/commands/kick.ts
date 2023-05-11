@@ -6,6 +6,7 @@ import {
 } from "discord.js";
 
 import { logDiscordEvent } from '../lib/logging';
+import { logChannelID } from '../config';
 
 export default {
   data: new SlashCommandBuilder()
@@ -23,7 +24,7 @@ export default {
     await interaction.guild.members.kick(target);
     await interaction.reply(`Kicked ${target.username}#${target.tag}.`);
 
-    const logChannel = interaction.client.channels.cache.get(process.env.LOG_CHANNEL_ID) as TextChannel;
+    const logChannel = interaction.client.channels.cache.get(logChannelID) as TextChannel;
     let embed = logDiscordEvent(`Kicked ${target.username}#${target.tag}.`);
 
     embed.addFields(

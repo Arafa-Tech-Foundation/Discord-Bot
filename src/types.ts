@@ -2,7 +2,7 @@ import { ClientEvents } from "discord.js";
 export enum LogLevel {
   DEBUG = "DEBUG",
   INFO = "INFO",
-  WARN = "WARNING",
+  WARN = "WARN",
   ERROR = "ERROR",
   FATAL = "FATAL",
 }
