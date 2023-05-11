@@ -31,7 +31,7 @@ export default {
         .addChoices(
           { name: 'Daily', value: '7d'},
           { name: 'Weekly', value: '4w'},
-          { name: 'Monthly', value: '1m'},
+          { name: 'Monthly', value: '12m'},
           { name: 'All', value: 'inf'},
         )),
 
@@ -41,7 +41,7 @@ export default {
     const [ futureDate, incrementFunc, incrementName ] =
       (tl === '7d') ? [new Date(currentDate.setDate(currentDate.getDate() + 7)), 'getDate', 'Day'] :
       (tl === '4w') ? [new Date(currentDate.setMonth(currentDate.getMonth() + 1)), 'getWeek', 'Week'] :
-      (tl === '1m') ? [new Date(currentDate.setFullYear(currentDate.getFullYear() + 1)), 'getMonth', 'Month'] :
+      (tl === '12m') ? [new Date(currentDate.setFullYear(currentDate.getFullYear() + 1)), 'getMonth', 'Month'] :
       (tl === 'inf') ? [new Date(9999, 0, 0), 'getFullYear', 'Year'] :
       null;
 
