@@ -33,3 +33,21 @@ export const updateUser = async (id: string, data: Record<string, any>): Promise
     data: data
   });
 };
+
+export const createSkullMessage = async (amount: number): Promise<any> => {
+  return await prisma.skullMessage.create({
+    data: {
+      ['amount']: amount
+    }
+  });
+};
+
+export const getSkullMessages = async(ltDate: Date) => {
+  return prisma.skullMessage.findMany({
+    where: {
+      created: {
+        lt: ltDate
+      }
+    }
+  });
+}
