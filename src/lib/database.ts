@@ -25,11 +25,32 @@ export const updateUsers = async (ids: string[], data: Partial<User>) => {
   });
 };
 
-export const updateUser = async (id: string, data: Partial<User>) => {
-  return prisma.user.update({
+export const updateUser = async (
+  id: string,
+  data: Record<string, any>,
+): Promise<any> => {
+  return await prisma.user.update({
     where: {
       ["id"]: id,
     },
-    data: data,
+    data,
+  });
+};
+
+export const createSkullMessage = async (amount: number): Promise<any> => {
+  return await prisma.skullMessage.create({
+    data: {
+      ["amount"]: amount,
+    },
+  });
+};
+
+export const getSkullMessages = async (ltDate: Date) => {
+  return prisma.skullMessage.findMany({
+    where: {
+      created: {
+        lt: ltDate,
+      },
+    },
   });
 };
