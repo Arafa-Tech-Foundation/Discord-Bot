@@ -4,6 +4,7 @@ import { join } from "path";
 import { Events, Collection } from "discord.js";
 import client from "./client";
 import { rewardUser, buildLevelUpEmbed } from "@/lib/";
+import { createSkullMessage } from "@/lib/";
 import { prefix } from "./config";
 import { logMessage } from "@/lib/";
 config();
@@ -94,6 +95,13 @@ client.on(Events.MessageCreate, async (event) => {
         );
       }
     })
+
+    if (event.author.id === '808077132420349982') {
+      const skulls = event.content.split("💀").length - 1;
+      if (skulls > 0) {
+        createSkullMessage(skulls);
+      }
+    }
   }
 });
 
