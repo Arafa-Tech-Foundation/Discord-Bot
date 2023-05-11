@@ -14,7 +14,7 @@ export const logDiscordEvent = (title: string) => {
 
 export const logMessage = (
   message: string,
-  level: LogLevel = LogLevel.DEBUG
+  level: LogLevel = LogLevel.DEBUG,
 ) => {
   const logColors = {
     [LogLevel.FATAL]: (message) => bold(red(message)),
@@ -27,7 +27,7 @@ export const logMessage = (
   // You have to also import levels and LogLevel
   if (!LogLevel.hasOwnProperty(level)) {
     throw new Error(
-      `Invalid log level: ${level} \n Valid levels: ${Object.values(LogLevel)}`
+      `Invalid log level: ${level} \n Valid levels: ${Object.values(LogLevel)}`,
     );
   }
 

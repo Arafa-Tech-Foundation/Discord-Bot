@@ -58,7 +58,7 @@ export default {
       .setColor("DarkPurple")
       .addFields(
         {
-          name: "Diffculty",
+          name: "Difficulty",
           value: difficulty,
           inline: true,
         },
