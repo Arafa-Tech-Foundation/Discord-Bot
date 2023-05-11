@@ -48,8 +48,8 @@ export default {
     const messages = await getSkullMessages(futureDate);
     const data = groupData(messages, incrementFunc, incrementName);
     const dataValues = Object.values(data);
-    const total = dataValues.reduce((acc: number, x: number) => acc+x);
-    const average = Math.floor(Number(total) / dataValues.length);
+    const total = dataValues.reduce((acc: number, x: number) => acc + x, 0) as number;
+    const average = Math.floor(total / dataValues.length);
 
     const chart = new ChartJsImage()
     chart.setConfig({
