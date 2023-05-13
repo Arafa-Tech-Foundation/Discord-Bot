@@ -1,6 +1,6 @@
-import { updateUser } from "./database";
-import calcLevel from "./calcLevel";
 import { EmbedBuilder, User } from "discord.js";
+import calcLevel from "./calcLevel";
+import { updateUser } from "./database";
 
 const formatToData = (rewardData: Partial<RewardData>): Record<string, any> => {
   const formatted = {};

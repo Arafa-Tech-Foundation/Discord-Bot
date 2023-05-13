@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma, User } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // do db stuff
@@ -14,7 +14,7 @@ export const getUsers = async () => {
   return prisma.user.findMany();
 };
 
-export const updateUsers = async (ids: string[], data: Record<string, any>) => {
+export const updateUsers = async (ids: string[], data: Partial<User>) => {
   return prisma.user.updateMany({
     where: {
       id: {
@@ -25,11 +25,32 @@ export const updateUsers = async (ids: string[], data: Record<string, any>) => {
   });
 };
 
-export const updateUser = async (id: string, data: Record<string, any>) => {
-  return prisma.user.update({
+export const updateUser = async (
+  id: string,
+  data: Record<string, any>,
+): Promise<any> => {
+  return await prisma.user.update({
     where: {
       ["id"]: id,
     },
-    data: data,
+    data,
+  });
+};
+
+export const createSkullMessage = async (amount: number): Promise<any> => {
+  return await prisma.skullMessage.create({
+    data: {
+      ["amount"]: amount,
+    },
+  });
+};
+
+export const getSkullMessages = async (ltDate: Date) => {
+  return prisma.skullMessage.findMany({
+    where: {
+      created: {
+        lt: ltDate,
+      },
+    },
   });
 };
