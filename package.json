@@ -3,7 +3,8 @@
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
-    "deploy": "ts-node -r tsconfig-paths/register src/scripts/deployCommands.ts"
+    "deploy": "ts-node -r tsconfig-paths/register src/scripts/deployCommands.ts",
+    "sync": "ts-node -r tsconfig-paths/register src/scripts/userSync.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.12.0",
