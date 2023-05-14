@@ -21,9 +21,10 @@ import { guildID } from "@/config";
 
   guildMembers.forEach(async (member) => {
     if (!dbUserIds.includes(member.user.id)) {
-      // TODO: ensure bots don't get added
-      const newUser = await createUser(member.user.id);
-      logMessage(`Created user: ${member.user.id} (${member.user.username})`);
+      if (!member.user.bot) {
+        const newUser = await createUser(member.user.id);
+        logMessage(`Created user: ${member.user.id} (${member.user.username})`);
+      }
     }
   });
 })();
