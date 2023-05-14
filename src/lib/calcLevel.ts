@@ -1,4 +1,4 @@
-const expPerLevel = 5;
+const expPerLevel = 45;
 
 export default function calcLevel(xp: number) {
   const scaledExp = Math.pow(xp, 1 / 1.1) + 25 - Math.pow(25, 1 / 1.1);
