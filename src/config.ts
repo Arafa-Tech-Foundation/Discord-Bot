@@ -1,24 +1,26 @@
 // Make sure to fill in the values needed!
 
-// Client //
+/* Client */
 export const prefix = process.env.PREFIX;
 export const botID = process.env.CLIENT_ID; // Why not?
 
-// Server //
-export const guildID: string = process.env.GUILD_ID;
+/* Server */
+export const guildID = process.env.GUILD_ID;
 
-// Channels //
+/* Welcome */
+export const welcomeChannelID = "1103905529849466954";
 
-// Welcome
-export const welcomeChannelID: string = "1103905529849466954";
+/* Log */
+export const logChannelID = "1072404003108962314";
 
-// Log
-export const logChannelID: string = "1072404003108962314";
-
-// Starboard
+/* Starboard */
 export const starCount = 5;
-export const starboardChannelID: string = "1093805675399888928";
-export const blacklistedStarboardChannelID: string = "1072403994804244550"; // Separate with commas
+export const starboardChannelID = "1093805675399888928";
 
-// Counting
-export const countChannelID: string = "1073496321090138124";
+/* Counting */
+export const countChannelID = "1073496321090138124";
+
+/* Channels */
+export const blacklistedStarboardChannelID = "1072403994804244550"; // Separate with commas
+export const blacklistedXpID =
+  "1073496321090138124,1093805675399888928,1072403994804244550,1107039035907645584";

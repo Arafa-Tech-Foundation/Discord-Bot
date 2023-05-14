@@ -49,7 +49,6 @@ const onMessageCreate = async (message: Message) => {
     const previousMessageNumber = parseInt(
       Parser.evaluate(previousCount).toFixed(5)
     );
-    console.log(messageNumber, previousCount);
     if (isNaN(previousMessageNumber)) {
       return;
     }
