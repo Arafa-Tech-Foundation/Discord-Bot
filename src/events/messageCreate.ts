@@ -1,4 +1,3 @@
-import client from "@/client";
 import { Parser } from "expr-eval";
 import defineEventHandler from "@/lib/eventHandler";
 import { Events, Message, EmbedBuilder } from "discord.js";
@@ -38,7 +37,7 @@ const onMessageCreate = async (message: Message) => {
           )
           .setTimestamp(new Date());
 
-        const embed_message = await message.channel.send({
+        await message.channel.send({
           content: `<@${message.author.id}>`,
           embeds: [embed],
         });
@@ -64,7 +63,7 @@ const onMessageCreate = async (message: Message) => {
         )
         .setTimestamp(new Date());
 
-      const embed_message = await message.channel.send({
+      await message.channel.send({
         content: `<@${message.author.id}>`,
         embeds: [embed],
       });
