@@ -5,7 +5,7 @@ import { Events, Collection, Message } from "discord.js";
 import client from "./client";
 import { rewardUser, buildLevelUpEmbed } from "@/lib/";
 import { createSkullMessage } from "@/lib/";
-import { prefix } from "./config";
+import { prefix, blacklistedXpID } from "./config";
 import { logMessage } from "@/lib/";
 import { LogLevel } from "./types";
 config();
@@ -65,7 +65,7 @@ client.on(Events.MessageCreate, async (message: Message) => {
       const command = textCommands.get(textCommandName);
       if (!command) {
         await message.reply(
-          "Command not found, or no arguments were provided.",
+          "Command not found, or no arguments were provided."
         );
         return;
       }
@@ -97,26 +97,21 @@ client.on(Events.MessageCreate, async (message: Message) => {
     }
   }
 
-  const newLevel = await rewardUser(message.author.id, { xp: 1, currency: 1 });
-
-  if (newLevel) {
-    message.channel.send({
-      embeds: [buildLevelUpEmbed(message.author, newLevel)],
+  if (!blacklistedXpID.split(",").includes(message.channel.id)) {
+    const newLevel = await rewardUser(message.author.id, {
+      xp: 1,
+      currency: 1,
     });
-  } else if (!message.author.bot) {
-    rewardUser(message.author.id, { xp: 1, currency: 1 }).then((newLevel) => {
-      if (newLevel) {
-        message.channel.send({
-          embeds: [buildLevelUpEmbed(message.author, newLevel)],
-        });
-      }
-    });
-
-    if (message.author.id === "808077132420349982") {
-      const skulls = message.content.split("💀").length - 1;
-      if (skulls > 0) {
-        createSkullMessage(skulls);
-      }
+    if (newLevel) {
+      message.channel.send({
+        embeds: [buildLevelUpEmbed(message.author, newLevel)],
+      });
+    }
+  }
+  if (message.author.id === "808077132420349982") {
+    const skulls = message.content.split("💀").length - 1;
+    if (skulls > 0) {
+      createSkullMessage(skulls);
     }
   }
 });
