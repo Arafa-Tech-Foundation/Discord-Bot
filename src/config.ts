@@ -18,7 +18,7 @@ export const starCount = 5;
 export const starboardChannelID = "1093805675399888928";
 
 /* Counting */
-export const countChannelID = "1073496321090138124";
+export const countChannelID = "1107121681266384926"; // bot manufacturing facility #pizza-house
 
 /* Channels */
 export const blacklistedStarboardChannelID = "1072403994804244550"; // Separate with commas

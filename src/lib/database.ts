@@ -1,5 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
-const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
 
 // do db stuff
 export const createUser = async (id: string) => {
@@ -27,7 +27,7 @@ export const updateUsers = async (ids: string[], data: Partial<User>) => {
 
 export const updateUser = async (
   id: string,
-  data: Record<string, any>,
+  data: Record<string, any>
 ): Promise<any> => {
   return await prisma.user.update({
     where: {
