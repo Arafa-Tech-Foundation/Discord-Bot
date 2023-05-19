@@ -37,6 +37,10 @@ export const updateUser = async (
   });
 };
 
+export const findManyUsers = async (data: object) => {
+  return prisma.user.findMany(data);
+};
+
 export const createSkullMessage = async (amount: number): Promise<any> => {
   return await prisma.skullMessage.create({
     data: {
