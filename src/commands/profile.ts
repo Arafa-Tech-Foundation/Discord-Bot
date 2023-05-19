@@ -11,7 +11,7 @@ export default {
     const userLevel = calcLevel(userData[0].xp);
 
     const embed = new EmbedBuilder()
-        .setTitle(`${interaction.user.tag}'s Profile`)
+        .setTitle(`${interaction.user}'s Profile`)
         .addFields(
             { name: 'Level', value: String(userLevel), inline: true}
         )
