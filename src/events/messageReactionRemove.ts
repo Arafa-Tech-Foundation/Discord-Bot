@@ -4,8 +4,15 @@ import { dmOnReaction } from "src/commands/reactionRoles";
 import defineEventHandler from "@/lib/eventHandler";
 import { logMessage } from "@/lib/logging";
 import { LogLevel } from "@/types";
+import { guildID } from "@/config";
 
 const reactionRemove = async (reaction: MessageReaction, user: User) => {
+  const guild = reaction.message.guild;
+
+  if (guild.id !== guildID) {
+    return;
+  }
+
   for (const reactionRoleMessage of reactionRoleMessages) {
     if (reactionRoleMessage.message.id !== reaction.message.id) {
       return;

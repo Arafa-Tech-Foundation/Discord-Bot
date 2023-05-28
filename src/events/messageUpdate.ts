@@ -2,10 +2,17 @@ import client from "@/client";
 import defineEventHandler from "@/lib/eventHandler";
 import { logDiscordEvent } from "@/lib/logging";
 import { Events, Message, TextChannel } from "discord.js";
-import { logChannelID } from "@/config";
+import { logChannelID, guildID } from "@/config";
 
 const onUpdate = (oldMessage: Message, newMessage: Message) => {
   // When a message is edited
+
+  const guild = oldMessage.guild;
+
+  if (guild.id !== guildID) {
+    return;
+  }
+
   if (oldMessage.member.id == client.user.id) return; // Ignore if the bot edited the message
   const logChannel = client.channels.cache.get(
     logChannelID

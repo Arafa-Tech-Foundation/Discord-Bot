@@ -10,7 +10,7 @@ import {
 } from "discord.js";
 import { reactionRoleMessages } from "../commands/reactionRoles";
 import { dmOnReaction } from "src/commands/reactionRoles";
-import { logChannelID, starboardChannelID } from "@/config";
+import { logChannelID, starboardChannelID, guildID } from "@/config";
 import client from "@/client";
 import defineEventHandler from "@/lib/eventHandler";
 
@@ -19,6 +19,12 @@ const postedStarredMessages = new Set(); // WARNING: THIS IS PRONE TO ERRORS, IF
 const blacklisted_starboard_channel_ids = logChannelID.split(",");
 
 const reactionAdd = async (reaction: MessageReaction, user: User) => {
+  const guild = reaction.message.guild;
+
+  if (guild.id !== guildID) {
+    return;
+  }
+  
   if (reaction.partial) {
     try {
       await reaction.fetch();
