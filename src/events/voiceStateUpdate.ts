@@ -1,10 +1,16 @@
 import defineEventHandler from "@/lib/eventHandler";
 import { logDiscordEvent } from "@/lib/logging";
 import { Events, TextChannel, VoiceState } from "discord.js";
-import { logChannelID } from "@/config";
+import { logChannelID, guildID } from "@/config";
 import client from "@/client";
 
 const onVoiceUpdate = (oldState: VoiceState, newState: VoiceState) => {
+  const guild = oldState.guild;
+
+  if (guild.id !== guildID) {
+    return;
+  }
+  
   const logChannel = client.channels.cache.get(
     logChannelID
   ) as TextChannel;

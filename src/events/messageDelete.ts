@@ -2,13 +2,19 @@ import client from "@/client";
 import defineEventHandler from "@/lib/eventHandler";
 import { logDiscordEvent } from "@/lib/logging";
 import { Events, Message, TextChannel } from "discord.js";
-import { logChannelID } from "@/config";
+import { logChannelID, guildID } from "@/config";
 
 const onMessageDelete = (message: Message) => {
   // When a message is deleted
   const logChannel = client.channels.cache.get(
     logChannelID
   ) as TextChannel;
+
+  const guild = message.guild;
+
+  if (guild.id !== guildID) {
+    return;
+  }
 
   if (message.author.bot) return;
 
