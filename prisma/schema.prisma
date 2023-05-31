@@ -11,15 +11,39 @@ datasource db {
 }
 
 model User {
-  id        String   @id @unique
-  xp        Int   @default(0)
-  currency  Int   @default(0)
-  created   DateTime  @default(now())
-  joined    DateTime  @default(now())
+  id                     String                   @id @unique
+  xp                     Int                      @default(0)
+  currency               Int                      @default(0)
+  created                DateTime                 @default(now())
+  joined                 DateTime                 @default(now())
+  challenge_submissions AOCChallengeSubmission[]
 }
 
 model SkullMessage {
-  id        Int   @id @unique @default(autoincrement())
-  amount    Int   @default(1)
-  created   DateTime @default(now())
+  id      Int      @id @unique @default(autoincrement())
+  amount  Int      @default(1)
+  created DateTime @default(now())
+}
+
+model AOCChallenge {
+  id          Int      @id @unique @default(autoincrement())
+  title       String
+  description String
+  day         Int
+  assigned    DateTime
+  submissions AOCChallengeSubmission[]
+}
+
+model AOCChallengeSubmission {
+  id          Int          @id @unique @default(autoincrement())
+  submission  String
+  created     DateTime     @default(now())
+  accepted    Boolean
+  feedback    String?
+  mem_usage   Int?
+  runtime     Int?
+  user        User         @relation(fields: [userId], references: [id])
+  userId      String
+  challenge   AOCChallenge @relation(fields: [challengeId], references: [id])
+  challengeId Int
 }
