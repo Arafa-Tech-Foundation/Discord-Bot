@@ -12,3 +12,8 @@ export interface EventHandlerOptions {
   execute: (...args) => void;
   once: boolean;
 }
+
+export interface ModalHandlerOptions {
+  id: string;
+  execute: (...args) => void;
+}

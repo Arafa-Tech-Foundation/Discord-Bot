@@ -16,10 +16,12 @@ process.on("uncaughtException", function (err) {
 });
 const cmdPath = join(__dirname, "commands");
 const eventsPath = join(__dirname, "events");
+const modalsPath = join(__dirname, "interactions", "modals");
 
 const commandFiles = readdirSync(cmdPath);
 const textCommandFiles = readdirSync(join(cmdPath, "text"));
 const eventFiles = readdirSync(eventsPath);
+const modalFiles = readdirSync(modalsPath);
 
 const commands = new Collection<string, any>();
 const textCommands = new Collection<string, any>();
@@ -45,6 +47,10 @@ commandFiles.forEach(async (file) => {
 
 eventFiles.forEach(async (file) => {
   await import(join(eventsPath, file));
+});
+
+modalFiles.forEach(async (file) => {
+  await import(join(modalsPath, file));
 });
 
 client.on(Events.MessageCreate, async (message: Message) => {
