@@ -27,7 +27,7 @@ export const updateUsers = async (ids: string[], data: Partial<User>) => {
 
 export const updateUser = async (
   id: string,
-  data: Record<string, any>,
+  data: Record<string, any>
 ): Promise<any> => {
   return await prisma.user.update({
     where: {
@@ -57,4 +57,8 @@ export const getSkullMessages = async (ltDate: Date) => {
       },
     },
   });
+};
+
+export const getAocChallenges = async () => {
+  return prisma.aocChallenge.findMany();
 };

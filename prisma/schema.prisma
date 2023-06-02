@@ -16,7 +16,7 @@ model User {
   currency               Int                      @default(0)
   created                DateTime                 @default(now())
   joined                 DateTime                 @default(now())
-  challenge_submissions AOCChallengeSubmission[]
+  challenge_submissions AocChallengeSubmission[]
 }
 
 model SkullMessage {
@@ -25,16 +25,17 @@ model SkullMessage {
   created DateTime @default(now())
 }
 
-model AOCChallenge {
+model AocChallenge {
   id          Int      @id @unique @default(autoincrement())
   title       String
   description String
   day         Int
   assigned    DateTime
-  submissions AOCChallengeSubmission[]
+  released    Boolean @default(false)
+  submissions AocChallengeSubmission[]
 }
 
-model AOCChallengeSubmission {
+model AocChallengeSubmission {
   id          Int          @id @unique @default(autoincrement())
   submission  String
   created     DateTime     @default(now())
@@ -44,6 +45,6 @@ model AOCChallengeSubmission {
   runtime     Int?
   user        User         @relation(fields: [userId], references: [id])
   userId      String
-  challenge   AOCChallenge @relation(fields: [challengeId], references: [id])
+  challenge   AocChallenge @relation(fields: [challengeId], references: [id])
   challengeId Int
 }
