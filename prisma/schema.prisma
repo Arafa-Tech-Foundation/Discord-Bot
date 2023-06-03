@@ -36,10 +36,10 @@ model AocChallenge {
 }
 
 model AocChallengeSubmission {
-  id          Int          @id @unique @default(autoincrement())
+  id          String          @id @unique @default(cuid())
   submission  String
   created     DateTime     @default(now())
-  accepted    Boolean
+  accepted    Boolean?
   feedback    String?
   mem_usage   Int?
   runtime     Int?

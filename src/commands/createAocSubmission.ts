@@ -10,7 +10,7 @@ import {
   TextChannel,
 } from "discord.js";
 
-import { getAocChallenges, logMessage } from "@/lib/";
+import { createAocSubmission, getAocChallenges, logMessage } from "@/lib/";
 import { LogLevel } from "@/types";
 import client from "@/client";
 
@@ -94,7 +94,20 @@ export default {
             value: challenge.description,
           }
         );
-      await channel.send({ embeds: [embed] });
+      try {
+        const newSubmission = await createAocSubmission(
+          interaction.user.id,
+          challenge.id,
+          code
+        );
+        embed.setFooter({
+          text: `Submission ID: ${newSubmission.id}`,
+        });
+        await channel.send({ embeds: [embed] });
+      } catch (err) {
+        logMessage(`Error while creating submission: ${err}`, LogLevel.ERROR);
+        return;
+      }
     }
   },
 };
