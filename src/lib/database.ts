@@ -58,3 +58,29 @@ export const getSkullMessages = async (ltDate: Date) => {
     },
   });
 };
+
+export const getAocChallenges = async () => {
+  return prisma.aocChallenge.findMany();
+};
+
+export const createAocSubmission = async (
+  uid: string,
+  challengeId: number,
+  submission: string
+) => {
+  return prisma.aocChallengeSubmission.create({
+    data: {
+      submission,
+      user: {
+        connect: {
+          id: uid,
+        },
+      },
+      challenge: {
+        connect: {
+          id: challengeId,
+        },
+      },
+    },
+  });
+};
