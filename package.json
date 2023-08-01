@@ -12,7 +12,7 @@
     "axios": "^1.4.0",
     "chartjs-to-image": "^1.2.1",
     "colorette": "^2.0.20",
-    "discord.js": "^14.11.0",
+    "discord.js": "^14.12.1",
     "expr-eval": "^2.0.2",
     "katex": "^0.16.7",
     "moment": "^2.29.4",
